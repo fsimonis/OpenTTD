@@ -3,10 +3,10 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=!!MENU_NAME!!
-Icon=!!TTD!!
-Exec=!!TTD!!
+Name=@MENU_NAME@
+Icon=@TTD@
+Exec=@TTD@
 Terminal=false
-Categories=!!MENU_GROUP!!
+Categories=@MENU_GROUP@
 Comment=A clone of Transport Tycoon Deluxe
 Keywords=game;simulation;transport;tycoon;deluxe;economics;multiplayer;money;train;ship;bus;truck;aircraft;cargo;
