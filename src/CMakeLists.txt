@@ -119,7 +119,7 @@ if(OS2)
 endif()
 
 if(UNIX)
-    if(OXS)
+    if(APPLE)
         target_sources(openttd PRIVATE os/macosx/crashlog_osx.cpp)
     else()
         target_sources(openttd PRIVATE os/unix/crashlog_unix.cpp)
@@ -127,7 +127,7 @@ if(UNIX)
     target_sources(openttd PRIVATE os/unix/unix.cpp)
 endif()
 
-if(SSE)
+if(HAS_SSE)
     target_sources(openttd
         PRIVATE
         viewport_sprite_sorter_sse4.cpp
@@ -956,28 +956,28 @@ if(NOT DEDICATED)
         blitter/32bpp_simple.hpp
         )
 
-    if(SSE)
+    if(HAS_SSE)
         target_sources(openttd
             PRIVATE
             blitter/32bpp_sse_func.hpp
             blitter/32bpp_sse_type.h
             )
     endif()
-    if(SSE2)
+    if(HAS_SSE2)
         target_sources(openttd
             PRIVATE
             blitter/32bpp_sse2.cpp
             blitter/32bpp_sse2.hpp
             )
     endif()
-    if (ssse3)
+    if (HAS_SSSE3)
         target_sources(openttd
             PRIVATE
             blitter/32bpp_ssse3.cpp
             blitter/32bpp_ssse3.hpp
             )
     endif()
-    if(sse4)
+    if(HAS_SSE4)
         target_sources(openttd
             PRIVATE
             blitter/32bpp_sse4.cpp
@@ -1178,7 +1178,7 @@ if(NOT DEDICATED)
     endif()
 endif()
 
-if(OSX)
+if(APPLE)
     target_sources(openttd PRIVATE os/macosx/macos.mm)
 
     if(NOT DEDICATED)

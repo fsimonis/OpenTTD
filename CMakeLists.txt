@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.8)
 project(openttd VERSION 1.7.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-
+# Also search the project cmake directory for modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+# Detect OS2
+if (CMAKE_SYSTEM_NAME EQUAL "OS2")
+    set(OS2 "yes")
+endif()
+
+cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
 
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -18,12 +24,22 @@ find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
 
+# Add the endian_check as an empty target.
 add_executable(endian_check "")
+
+# Set the C++ Standard to C++11
+target_compile_features(endian_check
+    PRIVATE
+    cxx_std_11
+    )
+
+# Add sources for endian_check
 target_sources(endian_check
     PRIVATE
     src/endian_check.cpp
     )
 
+# Add command to generate header endian_host.h
 add_custom_command(
     OUTPUT src/endian_host.h
     COMMAND endian_check > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_host.h # TODO Make this redirect portable
@@ -31,6 +47,7 @@ add_custom_command(
     COMMENT Generating endian_host.h
     )
 
+# Add command to generate header endian_target.h
 add_custom_command(
     OUTPUT src/endian_target.h
     COMMAND endian_check AUTO > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_target.h # TODO Make this redirect portable
@@ -149,6 +166,12 @@ add_custom_command(
 # Add the settings_gen as an empty target.
 add_executable(settings_gen "")
 
+# Set the C++ Standard to C++11
+target_compile_features(settings_gen
+    PUBLIC
+    cxx_std_11
+    )
+
 # Add the needed compile time definition "SETTINGSGEN" to the target.
 target_compile_definitions(settings_gen
     PRIVATE
@@ -196,6 +219,9 @@ add_custom_command(
 # Add openttd as en empty target.
 # See src/CMakeLists.txt for the sources.
 add_executable(openttd "")
+
+# Set the C++ Standard to C++11
+target_compile_features(openttd PUBLIC cxx_std_11)
 
 # Add the directories to look up includes.
 target_include_directories(openttd
