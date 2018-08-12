@@ -24,6 +24,18 @@ find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
 
+if(NOT CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX "/usr/local")
+endif()
+set(OPENTTD_REL_BINARY_DIR "games" CACHE STRING "relative to prefix")
+set(OPENTTD_REL_DATA_DIR "share/games/openttd" CACHE STRING "relative to prefix")
+set(OPENTTD_REL_ICON_DIR "share/pixmaps" CACHE STRING "relative to prefix")
+
+set(OPENTTD_BINARY_DIR "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_BINARY_DIR}")
+set(OPENTTD_DATA_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_DATA_DIR}")
+set(OPENTTD_ICON_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_ICON_DIR}")
+
+
 # Endian seems to be obsolete
 #
 # Add the endian_check as an empty target.
@@ -262,7 +274,7 @@ file(GLOB SETTINGS_TABLE_INI src/table/*.ini)
 # Add the command that generates the settings.h header file.
 add_custom_command(
     OUTPUT src/table/settings.h
-    COMMAND $<TARGET_FILE:settings_gen> -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${CMAKE_SOURCE_DIR}/src/table/settings.h.preamble -a ${CMAKE_SOURCE_DIR}/src/table/settings.h.postamble ${OPENTTD_SRC_DIR}/table/*.ini
+    COMMAND $<TARGET_FILE:settings_gen> -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${CMAKE_SOURCE_DIR}/src/table/settings.h.preamble -a ${CMAKE_SOURCE_DIR}/src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     DEPENDS settings_gen src/table/settings.h.preamble src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     COMMENT Generating Settings
     )
@@ -277,6 +289,12 @@ add_executable(openttd)
 
 # Set the C++ Standard to C++11
 target_compile_features(openttd PUBLIC cxx_std_11)
+
+# Add the needed compile time definitions
+target_compile_definitions(openttd
+    PRIVATE
+    "GLOBAL_DATA_DIR=\"${OPENTTD_DATA_DIR}\""
+    )
 
 # Add the directories to look up includes.
 target_include_directories(openttd
