@@ -183,7 +183,6 @@ target_sources(settings_gen
     src/string.cpp
     src/string_func.h
     src/strings_type.h
-    #    src/endian_host.h
     )
 
 # Add the include directories for the target
@@ -194,11 +193,13 @@ target_include_directories(settings_gen
     ${CMAKE_CURRENT_BINARY_DIR}/src
     )
 
+file(GLOB SETTINGS_TABLE_INI src/table/*.ini)
+
 # Add the command that generates the settings.h header file.
 add_custom_command(
     OUTPUT src/table/settings.h
-    COMMAND settings_gen -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${OPENTTD_SRC_DIR}/table/settings.h.preamble -a ${OPENTTD_SRC_DIR}/table/settings.h.postamble ${OPENTTD_SRC_DIR}/table/*.ini
-    MAIN_DEPENDENCY settings_gen
+    COMMAND $<TARGET_FILE:settings_gen> -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${CMAKE_SOURCE_DIR}/src/table/settings.h.preamble -a ${CMAKE_SOURCE_DIR}/src/table/settings.h.postamble ${OPENTTD_SRC_DIR}/table/*.ini
+    DEPENDS settings_gen src/table/settings.h.preamble src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     COMMENT Generating Settings
     )
 
