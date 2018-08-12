@@ -150,6 +150,70 @@ configure_file(media/openttd.desktop.in media/openttd.desktop @ONLY)
 
 
 #
+# Strings generator
+#
+
+# Add the string_gen as an empty target.
+add_executable(string_gen)
+
+# Set the C++ Standard to C++11
+target_compile_features(string_gen
+    PUBLIC
+    cxx_std_11
+    )
+
+# Add the needed compile time definition "SETTINGSGEN" to the target.
+target_compile_definitions(string_gen
+    PRIVATE
+    STRGEN
+    )
+
+# Add the sources for the settings_gen.
+target_sources(string_gen
+    PRIVATE
+    src/core/alloc_func.cpp
+    src/misc/getoptdata.cpp
+    src/misc/getoptdata.h
+    src/safeguards.h
+    src/strgen/strgen.cpp
+    src/strgen/strgen.h
+    src/strgen/strgen_base.cpp
+    src/string.cpp
+    src/table/control_codes.h
+    src/table/strgen_tables.h
+    )
+
+# Add the include directories for the target
+target_include_directories(string_gen
+    PRIVATE 
+    src
+    # Include configured files from the build-tree
+    ${CMAKE_CURRENT_BINARY_DIR}/src
+    )
+
+
+# Add the command that generates the src/table/strings.h header file.
+add_custom_command(
+    OUTPUT src/table/strings.h
+    COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/src/table
+    DEPENDS string_gen ${CMAKE_SOURCE_DIR}/src/lang/english.txt
+    COMMENT Generating Strings
+    )
+
+file(GLOB LANGUAGE_FILES src/lang/*.txt)
+set(LANGUAGE_LNG_FILES "")
+foreach(LANGUAGE_FILE ${LANGUAGE_FILES})
+    get_filename_component(LANGUAGE "${LANGUAGE_FILE}" NAME_WE)
+    list(APPEND LANGUAGE_LNG_FILES "objs/lang/${LANGUAGE}.lng")
+    add_custom_command(
+        OUTPUT objs/lang/${LANGUAGE}.lng
+        COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/objs/lang ${LANGUAGE_FILE}
+        DEPENDS string_gen ${LANGUAGE_FILE}
+        COMMENT Generating Language: ${LANGUAGE}
+        )
+endforeach()
+
+#
 # Settings generator
 #
 
@@ -217,6 +281,7 @@ target_compile_features(openttd PUBLIC cxx_std_11)
 # Add the directories to look up includes.
 target_include_directories(openttd
     PRIVATE 
+    src
     # Include configured files from the build-tree
     ${CMAKE_CURRENT_BINARY_DIR}/src
     )
@@ -238,8 +303,15 @@ target_link_libraries(openttd
 # Explicitly add the dependency to the version configuration.
 # add_dependencies(openttd configure_version)
 
+
 # Add the sources subtree
 add_subdirectory(src)
+
+target_sources(openttd
+    PRIVATE
+    src/table/strings.h
+    ${LANGUAGE_LNG_FILES}
+    )
 
 # Add the objects subtree
 # add_subdirectory(objs)
