@@ -1239,7 +1239,7 @@ endif()
 # Adding dependencies to generated source files
 #
 
-target_sources(openttd PRIVATE endian_target.h)
+# target_sources(openttd PRIVATE endian_target.h)
 
 target_sources(openttd PRIVATE table/settings.h)
 

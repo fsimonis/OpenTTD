@@ -17,43 +17,45 @@ find_package(LZO2 REQUIRED)
 find_package(LibLZMA REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(FontConfig REQUIRED)
-find_package(ICU)
+# find_package(ICU REQUIRED)
 find_package(Squirrel REQUIRED)
 
 find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
 
+# Endian seems to be obsolete
+#
 # Add the endian_check as an empty target.
-add_executable(endian_check "")
-
-# Set the C++ Standard to C++11
-target_compile_features(endian_check
-    PRIVATE
-    cxx_std_11
-    )
-
-# Add sources for endian_check
-target_sources(endian_check
-    PRIVATE
-    src/endian_check.cpp
-    )
-
-# Add command to generate header endian_host.h
-add_custom_command(
-    OUTPUT src/endian_host.h
-    COMMAND endian_check > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_host.h # TODO Make this redirect portable
-    MAIN_DEPENDENCY endian_check
-    COMMENT Generating endian_host.h
-    )
-
-# Add command to generate header endian_target.h
-add_custom_command(
-    OUTPUT src/endian_target.h
-    COMMAND endian_check AUTO > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_target.h # TODO Make this redirect portable
-    MAIN_DEPENDENCY endian_check
-    COMMENT Generating endian_target.h
-    )
+# add_executable(endian_check)
+# 
+# # Set the C++ Standard to C++11
+# target_compile_features(endian_check
+#     PRIVATE
+#     cxx_std_11
+#     )
+# 
+# # Add sources for endian_check
+# target_sources(endian_check
+#     PRIVATE
+#     src/endian_check.cpp
+#     )
+# 
+# # Add command to generate header endian_host.h
+# add_custom_command(
+#     OUTPUT src/endian_host.h
+#     COMMAND endian_check > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_host.h # TODO Make this redirect portable
+#     MAIN_DEPENDENCY endian_check
+#     COMMENT Generating endian_host.h
+#     )
+# 
+# # Add command to generate header endian_target.h
+# add_custom_command(
+#     OUTPUT src/endian_target.h
+#     COMMAND endian_check AUTO > ${CMAKE_CURRENT_BINARY_DIR}/src/endian_target.h # TODO Make this redirect portable
+#     MAIN_DEPENDENCY endian_check
+#     COMMENT Generating endian_target.h
+#     )
 
 # TODO Remove depend as it is not needed anymore
 
@@ -146,25 +148,13 @@ configure_file(src/os/windows/ottdres.rc.in src/os/windows/ottdres.rc @ONLY)
 # MENU_NAME TTD MENU_GROUP
 configure_file(media/openttd.desktop.in media/openttd.desktop @ONLY)
 
-# Add a target for the configuration that will always be built.
-add_custom_target(configure_version
-    ALL
-    DEPENDS src/rev.cpp src/os/windows/ottdres.rc
-    )
-
-# Add the command to configure the revision files.
-add_custom_command(
-    OUTPUTS src/rev.cpp src/os/windows/ottdres.rc
-    COMMAND ${CMAKE_COMMAND} -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/configure_version.cmake
-    )
-
 
 #
 # Settings generator
 #
 
 # Add the settings_gen as an empty target.
-add_executable(settings_gen "")
+add_executable(settings_gen)
 
 # Set the C++ Standard to C++11
 target_compile_features(settings_gen
@@ -193,7 +183,7 @@ target_sources(settings_gen
     src/string.cpp
     src/string_func.h
     src/strings_type.h
-    src/endian_host.h
+    #    src/endian_host.h
     )
 
 # Add the include directories for the target
@@ -218,7 +208,7 @@ add_custom_command(
 
 # Add openttd as en empty target.
 # See src/CMakeLists.txt for the sources.
-add_executable(openttd "")
+add_executable(openttd)
 
 # Set the C++ Standard to C++11
 target_compile_features(openttd PUBLIC cxx_std_11)
@@ -245,13 +235,13 @@ target_link_libraries(openttd
     )
 
 # Explicitly add the dependency to the version configuration.
-add_dependencies(openttd configure_version)
+# add_dependencies(openttd configure_version)
 
 # Add the sources subtree
 add_subdirectory(src)
 
 # Add the objects subtree
-add_subdirectory(objs)
+# add_subdirectory(objs)
 
 # TODO: Add the documentation subtree
 # add_subdirectory(doc)
