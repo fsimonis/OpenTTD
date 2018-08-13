@@ -2,6 +2,8 @@
 #ifndef _SQSTD_STRING_H_
 #define _SQSTD_STRING_H_
 
+#include <cctype>
+
 typedef unsigned int SQRexBool;
 typedef struct SQRex SQRex;
 
