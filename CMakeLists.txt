@@ -318,6 +318,7 @@ target_link_libraries(openttd
     icu
     sdl
     allegro
+    Squirrel::Squirrel
     )
 
 # Explicitly add the dependency to the version configuration.
