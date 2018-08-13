@@ -1,4 +1,8 @@
 add_library(Squirrel)
+target_compile_features(Squirrel
+    PUBLIC
+    cxx_std_11
+    )
 target_include_directories(Squirrel
     PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
@@ -36,6 +40,10 @@ target_sources(Squirrel
     )
 
 add_library(SqStdLib)
+target_link_libraries(SqStdLib
+    PUBLIC
+    Squirrel
+    )
 target_sources(SqStdLib
     PRIVATE
     sqstdlib/sqstdaux.cpp
