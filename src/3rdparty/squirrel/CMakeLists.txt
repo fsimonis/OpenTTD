@@ -1,0 +1,45 @@
+add_library(Squirrel)
+target_include_directories(Squirrel
+    PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/include
+    )
+target_sources(Squirrel
+    PRIVATE
+    squirrel/sqapi.cpp
+    squirrel/sqarray.h
+    squirrel/sqbaselib.cpp
+    squirrel/sqclass.cpp
+    squirrel/sqclass.h
+    squirrel/sqclosure.h
+    squirrel/sqcompiler.cpp
+    squirrel/sqcompiler.h
+    squirrel/sqdebug.cpp
+    squirrel/sqfuncproto.h
+    squirrel/sqfuncstate.cpp
+    squirrel/sqfuncstate.h
+    squirrel/sqlexer.cpp
+    squirrel/sqlexer.h
+    squirrel/sqmem.cpp
+    squirrel/sqobject.cpp
+    squirrel/sqobject.h
+    squirrel/sqopcodes.h
+    squirrel/sqpcheader.h
+    squirrel/sqstate.cpp
+    squirrel/sqstate.h
+    squirrel/sqstring.h
+    squirrel/sqtable.cpp
+    squirrel/sqtable.h
+    squirrel/squserdata.h
+    squirrel/squtils.h
+    squirrel/sqvm.cpp
+    squirrel/sqvm.h
+    )
+
+add_library(SqStdLib)
+target_sources(SqStdLib
+    PRIVATE
+    sqstdlib/sqstdaux.cpp
+    sqstdlib/sqstdmath.cpp
+    sqstdlib/sqstdrex.cpp
+    sqstdlib/sqstdstring.cpp
+    )

@@ -1,0 +1,9 @@
+add_library(OS2)
+target_sources(OS2
+    PRIVATE
+    getaddrinfo.c
+    getnameinfo.c
+    PUBLIC
+    getaddrinfo.h
+    getnameinfo.h
+    )

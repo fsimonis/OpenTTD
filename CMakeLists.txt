@@ -11,15 +11,13 @@ endif()
 
 cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
 
-find_package(PNG REQUIRED)
-find_package(ZLIB REQUIRED)
-find_package(LZO2 REQUIRED)
-find_package(LibLZMA REQUIRED)
-find_package(Freetype REQUIRED)
-find_package(FontConfig REQUIRED)
+find_package(PNG)
+find_package(ZLIB)
+find_package(LZO2)
+find_package(LibLZMA)
+find_package(Freetype)
+find_package(FontConfig)
 # find_package(ICU REQUIRED)
-find_package(Squirrel REQUIRED)
-
 find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
@@ -289,6 +287,9 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/table)
 # See src/CMakeLists.txt for the sources.
 add_executable(openttd)
 
+# Add the sources subtree
+add_subdirectory(src)
+
 # Set the C++ Standard to C++11
 target_compile_features(openttd PUBLIC cxx_std_11)
 
@@ -306,6 +307,7 @@ target_include_directories(openttd
     ${CMAKE_CURRENT_BINARY_DIR}/src
     )
 
+
 # Add libraries to link to.
 target_link_libraries(openttd
     PRIVATE
@@ -318,15 +320,15 @@ target_link_libraries(openttd
     icu
     sdl
     allegro
-    Squirrel::Squirrel
+    # Third party libraries
+    Squirrel
+    SqStdLib
+    MD5
+    OS2
     )
 
 # Explicitly add the dependency to the version configuration.
 # add_dependencies(openttd configure_version)
-
-
-# Add the sources subtree
-add_subdirectory(src)
 
 target_sources(openttd
     PRIVATE

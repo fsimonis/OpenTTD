@@ -111,11 +111,8 @@ if(OS2)
     target_sources(openttd
         PRIVATE
         os/os2/os2.cpp
-        3rdparty/os2/getaddrinfo.c
-        3rdparty/os2/getaddrinfo.h
-        3rdparty/os2/getnameinfo.c
-        3rdparty/os2/getnameinfo.h
         )
+    target_link_libraries(openttd PRIVATE OS2)
 endif()
 
 if(UNIX)
@@ -698,10 +695,6 @@ target_sources(openttd
     table/unicode.h
     table/water_land.h
 
-    # MD5
-    3rdparty/md5/md5.cpp
-    3rdparty/md5/md5.h
-
     # Script
     script/script_config.cpp
     script/script_config.hpp
@@ -722,44 +715,6 @@ target_sources(openttd
     script/squirrel_helper_type.hpp
     script/squirrel_std.cpp
     script/squirrel_std.hpp
-
-    # Squirrel
-    3rdparty/squirrel/squirrel/sqapi.cpp
-    3rdparty/squirrel/squirrel/sqbaselib.cpp
-    3rdparty/squirrel/squirrel/sqclass.cpp
-    3rdparty/squirrel/squirrel/sqcompiler.cpp
-    3rdparty/squirrel/squirrel/sqdebug.cpp
-    3rdparty/squirrel/squirrel/sqfuncstate.cpp
-    3rdparty/squirrel/squirrel/sqlexer.cpp
-    3rdparty/squirrel/squirrel/sqmem.cpp
-    3rdparty/squirrel/squirrel/sqobject.cpp
-    3rdparty/squirrel/squirrel/sqstate.cpp
-    3rdparty/squirrel/sqstdlib/sqstdaux.cpp
-    3rdparty/squirrel/sqstdlib/sqstdmath.cpp
-    3rdparty/squirrel/squirrel/sqtable.cpp
-    3rdparty/squirrel/squirrel/sqvm.cpp
-
-    # Squirrel headers
-    3rdparty/squirrel/squirrel/sqarray.h
-    3rdparty/squirrel/squirrel/sqclass.h
-    3rdparty/squirrel/squirrel/sqclosure.h
-    3rdparty/squirrel/squirrel/sqcompiler.h
-    3rdparty/squirrel/squirrel/sqfuncproto.h
-    3rdparty/squirrel/squirrel/sqfuncstate.h
-    3rdparty/squirrel/squirrel/sqlexer.h
-    3rdparty/squirrel/squirrel/sqobject.h
-    3rdparty/squirrel/squirrel/sqopcodes.h
-    3rdparty/squirrel/squirrel/sqpcheader.h
-    3rdparty/squirrel/squirrel/sqstate.h
-    3rdparty/squirrel/include/sqstdaux.h
-    3rdparty/squirrel/include/sqstdmath.h
-    3rdparty/squirrel/include/sqstdstring.h
-    3rdparty/squirrel/squirrel/sqstring.h
-    3rdparty/squirrel/squirrel/sqtable.h
-    3rdparty/squirrel/include/squirrel.h
-    3rdparty/squirrel/squirrel/squserdata.h
-    3rdparty/squirrel/squirrel/squtils.h
-    3rdparty/squirrel/squirrel/sqvm.h
 
     # AI Core
     ai/ai.hpp
@@ -1270,3 +1225,5 @@ target_include_directories(openttd
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/core
 )
+
+add_subdirectory(3rdparty)

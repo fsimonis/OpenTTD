@@ -1,0 +1,11 @@
+add_library(MD5)
+target_sources(MD5
+    PRIVATE
+    md5.cpp
+    PUBLIC
+    md5.h
+    )
+target_include_directories(MD5
+    PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}
+    )
