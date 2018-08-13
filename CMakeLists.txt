@@ -224,6 +224,7 @@ foreach(LANGUAGE_FILE ${LANGUAGE_FILES})
         COMMENT Generating Language: ${LANGUAGE}
         )
 endforeach()
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/objs/lang")
 
 #
 # Settings generator
@@ -278,6 +279,7 @@ add_custom_command(
     DEPENDS settings_gen src/table/settings.h.preamble src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     COMMENT Generating Settings
     )
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/table)
 
 #
 # The OpenTTD executable
