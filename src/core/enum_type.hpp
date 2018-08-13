@@ -12,6 +12,8 @@
 #ifndef ENUM_TYPE_HPP
 #define ENUM_TYPE_HPP
 
+#include "../stdafx.h"
+
 /** Some enums need to have allowed incrementing (i.e. StationClassID) */
 #define DECLARE_POSTFIX_INCREMENT(type) \
 	inline type operator ++(type& e, int) \
