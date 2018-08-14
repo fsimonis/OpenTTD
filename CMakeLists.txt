@@ -189,22 +189,25 @@ target_compile_definitions(openttd
 # Add the directories to look up includes.
 target_include_directories(openttd
     PRIVATE 
-    src
+    ${CMAKE_SOURCE_DIR}/src
     # Include configured files from the build-tree
     ${CMAKE_CURRENT_BINARY_DIR}/src
     )
 
 
-# Add system libraries to link to.
+# Add detected system libraries to link to.
 if(PNG_FOUND)
     target_link_libraries(openttd PRIVATE PNG::PNG)
 endif()
+
 if(ZLIB_FOUND)
     target_link_libraries(openttd PRIVATE ZLIB::ZLIB)
 endif()
+
 if(LZO2_FOUND)
     target_link_libraries(openttd PRIVATE LZO2::LZO2)
 endif()
+
 if(LZMA_FOUND)
     add_library(LZMA UNKNOWN IMPORTED)
     target_link_libraries(LZMA INTERFACE LIBLZMA_LIBRARY)
@@ -212,12 +215,15 @@ if(LZMA_FOUND)
 
     target_link_libraries(openttd PRIVATE LZMA)
 endif()
+
 if(Freetype_FOUND)
     target_link_libraries(openttd PRIVATE Freetype::Freetype)
 endif()
+
 if(FontConfig_FOUND)
     target_link_libraries(openttd PRIVATE FontConfig::FontConfig)
 endif()
+
 if(ICU_FOUND)
     # Use the ICU unicode library
     target_link_libraries(openttd PRIVATE ICU::uc)
@@ -232,7 +238,6 @@ target_link_libraries(openttd
     Squirrel
     SqStdLib
     MD5
-    OS2
     )
 
 # Explicitly add the dependency to the version configuration.
