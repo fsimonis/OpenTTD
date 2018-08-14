@@ -1,0 +1,88 @@
+find_package(Git)
+
+# Default Values
+set(OPENTTD_VERSION "")
+set(OPENTTD_ISODATE "")
+set(OPENTTD_MODIFIED "1")
+set(OPENTTD_HASH "")
+
+# Git-Based Values
+if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    # HASH
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --verify HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE OPENTTD_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+        )
+
+    # SHORTHASH
+    string(SUBSTRING "${OPENTTD_HASH}" 0 8 OPENTTD_SHORTHASH)
+
+    # ISODATE
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} show -s --pretty=%ci HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE OPENTTD_ISODATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    # Result shape is '2018-08-13 21:38:49 +0200'
+    string(REPLACE "-" "" OPENTTD_ISODATE "${OPENTTD_ISODATE}")
+    # Extract 20180813
+    string(SUBSTRING "${OPENTTD_ISODATE}" 0 8 OPENTTD_ISODATE)
+
+    # BRANCH
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE OPENTTD_BRANCH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+        )
+
+    # TAG
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} name-rev --name-only --tags --no-undefined HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE OPENTTD_TAG
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+        )
+
+    # VERSION
+    if(TAG)
+        set(OPENTTD_VERSION "${OPENTTD_TAG}")
+    elseif("${OPENTTD_BRANCH}" STREQUAL "master")
+        set(OPENTTD_VERSION "${OPENTTD_ISODATE}-g${OPENTTD_SHORTHASH}")
+    else()
+        set(OPENTTD_VERSION "${OPENTTD_ISODATE}-${OPENTTD_BRANCH}-g${OPENTTD_SHORTHASH}")
+    endif()
+
+    # MODIFIED
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} diff-index HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE OPENTTD_MODIFIED_TMP
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    if(OPENTTD_MODIFIED_TMP)
+        set(OPENTTD_MODIFIED "2")
+        set(OPENTTD_VERSION "${OPENTTD_VERSION}M")
+    endif()
+
+    # Cleanup scope
+    unset(OPENTTD_MODIFIED_TMP)
+    unset(OPENTTD_SHORTHASH)
+    unset(OPENTTD_BRANCH)
+    unset(OPENTTD_TAG)
+
+    # OTTDREV-bases Values
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/.ottdrev")
+    file(STRINGS "${CMAKE_SOURCE_DIR}/.ottdrev" OTTDREV_CONTENT)
+    list(GET OTTDREV_CONTENT 0 OPENTTD_VERSION)
+    list(GET OTTDREV_CONTENT 1 OPENTTD_ISODATE)
+    list(GET OTTDREV_CONTENT 2 OPENTTD_MODIFIED)
+    list(GET OTTDREV_CONTENT 3 OPENTTD_HASH)
+    unset(OTTDREV_CONTENT)
+endif()
