@@ -1,9 +1,14 @@
+# Visit third party libaries
+add_subdirectory(3rdparty)
+
 #
 # Source Files
 #
+# Use LOCAL_SOURCES to gather the source files relative to the src/ directory.
+# Finally add them to the target
+set(LOCAL_SOURCES "")
 
-target_sources(openttd
-    PRIVATE
+list(APPEND LOCAL_SOURCES
     airport.cpp
     animated_tile.cpp
     articulated_vehicles.cpp
@@ -104,12 +109,11 @@ target_sources(openttd
     )
 
 if(SLD_FOUND)
-    target_sources(openttd PRIVATE sdl.cpp)
+    list(APPEND LOCAL_SOURCES sdl.cpp)
 endif()
 
 if(OS2)
-    target_sources(openttd
-        PRIVATE
+    list(APPEND LOCAL_SOURCES
         os/os2/os2.cpp
         )
     target_link_libraries(openttd PRIVATE OS2)
@@ -117,16 +121,15 @@ endif()
 
 if(UNIX)
     if(APPLE)
-        target_sources(openttd PRIVATE os/macosx/crashlog_osx.cpp)
+        list(APPEND LOCAL_SOURCES os/macosx/crashlog_osx.cpp)
     else()
-        target_sources(openttd PRIVATE os/unix/crashlog_unix.cpp)
+        list(APPEND LOCAL_SOURCES os/unix/crashlog_unix.cpp)
     endif()
-    target_sources(openttd PRIVATE os/unix/unix.cpp)
+    list(APPEND LOCAL_SOURCES os/unix/unix.cpp)
 endif()
 
 if(HAS_SSE)
-    target_sources(openttd
-        PRIVATE
+    list(APPEND LOCAL_SOURCES
         viewport_sprite_sorter_sse4.cpp
         )
 endif()
@@ -136,16 +139,14 @@ endif()
 #
 
 if (ALLEGRO_FOUND)
-    target_sources(openttd
-        PRIVATE
+    list(APPEND LOCAL_SOURCES
         music/allegro_m.h
         sound/allegro_s.h
         video/allegro_v.h
         )
 endif()
 
-target_sources(openttd
-    PRIVATE
+list(APPEND LOCAL_SOURCES
     aircraft.h
     airport.h
     animated_tile_func.h
@@ -419,8 +420,7 @@ target_sources(openttd
     )
 
 if(NOT WIN32)
-    target_sources(openttd
-        PRIVATE
+    list(APPEND LOCAL_SOURCES
         music/bemidi.h
         music/cocoa_m.h
         music/extmidi.h
@@ -437,8 +437,7 @@ if(NOT WIN32)
 endif()
 
 # Core Source Code
-target_sources(openttd
-    PRIVATE
+list(APPEND LOCAL_SOURCES
     core/alloc_func.cpp
     core/alloc_func.hpp
     core/alloc_type.hpp
@@ -885,8 +884,7 @@ target_sources(openttd
 
 # Blitters
 if(NOT DEDICATED)
-    target_sources(openttd
-        PRIVATE
+    list(APPEND LOCAL_SOURCES
 
         blitter/base.cpp
         blitter/base.hpp
@@ -912,29 +910,25 @@ if(NOT DEDICATED)
         )
 
     if(HAS_SSE)
-        target_sources(openttd
-            PRIVATE
+        list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse_func.hpp
             blitter/32bpp_sse_type.h
             )
     endif()
     if(HAS_SSE2)
-        target_sources(openttd
-            PRIVATE
+        list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse2.cpp
             blitter/32bpp_sse2.hpp
             )
     endif()
     if (HAS_SSSE3)
-        target_sources(openttd
-            PRIVATE
+        list(APPEND LOCAL_SOURCES
             blitter/32bpp_ssse3.cpp
             blitter/32bpp_ssse3.hpp
             )
     endif()
     if(HAS_SSE4)
-        target_sources(openttd
-            PRIVATE
+        list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse4.cpp
             blitter/32bpp_sse4.hpp
             blitter/32bpp_anim_sse4.cpp
@@ -943,8 +937,7 @@ if(NOT DEDICATED)
     endif()
 endif()
 
-target_sources(openttd
-    PRIVATE
+list(APPEND LOCAL_SOURCES
     # Drivers
     music/music_driver.hpp
     sound/sound_driver.hpp
@@ -1077,74 +1070,72 @@ target_sources(openttd
 
 
 # Video
-target_sources(openttd
-    PRIVATE
+list(APPEND LOCAL_SOURCES
     video/dedicated_v.cpp
     video/null_v.cpp
     )
 
 if(NOT DEDICATED)
     if(ALLEGRO_FOUND)
-        target_sources(openttd PRIVATE video/allegro_v.cpp)
+        list(APPEND LOCAL_SOURCES video/allegro_v.cpp)
     endif()
     if(SDL_FOUND)
-        target_sources(openttd PRIVATE video/sdl_v.cpp)
+        list(APPEND LOCAL_SOURCES video/sdl_v.cpp)
     endif()
     if(WIN32 OR WINCE)
-        target_sources(openttd PRIVATE video/win32_v.cpp)
+        list(APPEND LOCAL_SOURCES video/win32_v.cpp)
     endif()
 endif()
 
 # Music
-target_sources(openttd PRIVATE music/null_m.cpp)
+list(APPEND LOCAL_SOURCES music/null_m.cpp)
 
 if(NOT DEDICATED)
     if(ALLEGRO_FOUND)
-        target_sources(openttd PRIVATE music/allegro_m.cpp)
+        list(APPEND LOCAL_SOURCES music/allegro_m.cpp)
     endif()
     if(DIRECTMUSIC_FOUND)
-        target_sources(openttd PRIVATE music/dmusic.cpp)
+        list(APPEND LOCAL_SOURCES music/dmusic.cpp)
     endif()
     if(BEOS_FOUND)
-        target_sources(openttd PRIVATE music/bemidi.cpp)
+        list(APPEND LOCAL_SOURCES music/bemidi.cpp)
     endif()
     if(LIBTIMIDITY_FOUND)
-        target_sources(openttd PRIVATE music/libtimidity.cpp)
+        list(APPEND LOCAL_SOURCES music/libtimidity.cpp)
     endif()
     if(WIN32)
-        target_sources(openttd PRIVATE music/win32_m.cpp)
+        list(APPEND LOCAL_SOURCES music/win32_m.cpp)
     endif()
     if( NOT ( WIN32 OR WINCE OR PSP OR DOC OR MORPHOS ) )
-        target_sources(openttd PRIVATE music/extmidi.cpp)
+        list(APPEND LOCAL_SOURCES music/extmidi.cpp)
     endif()
 endif()
 
 # Sound
-target_sources(openttd PRIVATE sound/null_s.cpp)
+list(APPEND LOCAL_SOURCES sound/null_s.cpp)
 if(NOT DEDICATED)
     if(ALLEGRO_FOUND)
-        target_sources(openttd PRIVATE sound/allegro_s.cpp)
+        list(APPEND LOCAL_SOURCES sound/allegro_s.cpp)
     endif()
     if(SDL_FOUND)
-        target_sources(openttd PRIVATE sound/sdl_s.cpp)
+        list(APPEND LOCAL_SOURCES sound/sdl_s.cpp)
     endif()
     if(WIN32)
-        target_sources(openttd PRIVATE sound/win32_s.cpp)
+        list(APPEND LOCAL_SOURCES sound/win32_s.cpp)
     endif()
 endif()
 
 if(APPLE)
-    target_sources(openttd PRIVATE os/macosx/macos.mm)
+    list(APPEND LOCAL_SOURCES os/macosx/macos.mm)
 
     if(NOT DEDICATED)
-        target_sources(openttd
-            PRIVATE
+        list(APPEND LOCAL_SOURCES
             music/qtmidi.cpp
             )
         end()
 
         if(COCOA_FOUNC)
-            target_sources(openttd PRIVATE
+            list(APPEND LOCAL_SOURCES 
                 video/cocoa/cocoa_v.mm
                 video/cocoa/event.mm
                 video/cocoa/fullscreen.mm
@@ -1158,7 +1149,7 @@ if(APPLE)
     endif()
 
     if(WIN32)
-        target_sources(openttd PRIVATE
+        list(APPEND LOCAL_SOURCES 
             os/windows/crashlog_win.cpp
             os/windows/ottdres.rc
             os/windows/win32.cpp
@@ -1166,7 +1157,7 @@ if(APPLE)
     endif()
 
     if(WINCE)
-        target_sources(openttd PRIVATE
+        list(APPEND LOCAL_SOURCES 
             os/windows/ottdres.rc
             os/windows/win32.cpp
             )
@@ -1174,56 +1165,42 @@ if(APPLE)
 endif()
 
 # Threading
-target_sources(openttd PRIVATE thread/thread.h)
+list(APPEND LOCAL_SOURCES thread/thread.h)
 if(NOT HAVE_THREAD)
-    target_sources(openttd PRIVATE thread/thread_none.cpp)
+    list(APPEND LOCAL_SOURCES thread/thread_none.cpp)
 else()
     if(WIN32)
-        target_sources(openttd PRIVATE thread/thread_win32.cpp)
+        list(APPEND LOCAL_SOURCES thread/thread_win32.cpp)
     elseif(OS2)
-        target_sources(openttd PRIVATE thread/thread_os2.cpp)
+        list(APPEND LOCAL_SOURCES thread/thread_os2.cpp)
     elseif(MORPHOS)
-        target_sources(openttd PRIVATE thread/thread_morphos.cpp)
+        list(APPEND LOCAL_SOURCES thread/thread_morphos.cpp)
     else()
-        target_sources(openttd PRIVATE thread/thread_pthread.cpp)
+        list(APPEND LOCAL_SOURCES thread/thread_pthread.cpp)
     endif()
 endif()
-
-
-#
-# Adding dependencies to generated source files
-#
-
-# target_sources(openttd PRIVATE endian_target.h)
-
-target_sources(openttd PRIVATE table/settings.h)
 
 
 #
 # Postprocessing the sources
 #
 
-message("Processing Sources")
-
-get_property(local_sources TARGET openttd PROPERTY SOURCES)
-unset(prefixed_sources)
-foreach(source ${local_sources})
-    list(APPEND prefixed_sources "src/${source}")
+# cmake 3.12+
+# list(TRANSFORM LOCAL_SOURCES PREPEND "src/")
+# Same as above using a TeMPorary list
+set(LOCAL_SOURCES_TMP "")
+foreach(source ${LOCAL_SOURCES})
+    list(APPEND LOCAL_SOURCES_TMP "src/${source}")
 endforeach()
-set_property(TARGET openttd PROPERTY SOURCES ${prefixed_sources})
+set(LOCAL_SOURCES "${LOCAL_SOURCES_TMP}")
+unset(LOCAL_SOURCES_TMP)
 
-get_property(local_sources TARGET openttd PROPERTY INTERFACE_SOURCES)
-unset(prefixed_sources)
-foreach(source ${local_sources})
-    list(APPEND prefixed_sources "src/${source}")
-endforeach()
-set_property(TARGET openttd PROPERTY INTERFACE_SOURCES ${prefixed_sources})
+# Add sources to target openttd
+target_sources(openttd PRIVATE ${LOCAL_SOURCES})
+unset(LOCAL_SOURCES)
 
+#
+# Adding dependencies to generated source files
+#
 
-target_include_directories(openttd
-    PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}/core
-)
-
-add_subdirectory(3rdparty)
+target_sources(openttd PRIVATE src/table/settings.h)
