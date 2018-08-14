@@ -69,6 +69,8 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     if(OPENTTD_MODIFIED_TMP)
         set(OPENTTD_MODIFIED "2")
         set(OPENTTD_VERSION "${OPENTTD_VERSION}M")
+    else()
+        set(OPENTTD_MODIFIED "0")
     endif()
 
     # Cleanup scope
