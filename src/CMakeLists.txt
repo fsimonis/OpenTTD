@@ -112,19 +112,19 @@ if(SLD_FOUND)
     list(APPEND LOCAL_SOURCES sdl.cpp)
 endif()
 
-if(OS2)
-    list(APPEND LOCAL_SOURCES
-        os/os2/os2.cpp
-        )
-endif()
-
-if(UNIX)
-    if(APPLE)
-        list(APPEND LOCAL_SOURCES os/macosx/crashlog_osx.cpp)
+if(NOT WIN32)
+    if(OS2)
+        list(APPEND LOCAL_SOURCES
+            os/os2/os2.cpp
+            )
     else()
-        list(APPEND LOCAL_SOURCES os/unix/crashlog_unix.cpp)
+        if(APPLE)
+            list(APPEND LOCAL_SOURCES os/macosx/crashlog_osx.cpp)
+        else()
+            list(APPEND LOCAL_SOURCES os/unix/crashlog_unix.cpp)
+        endif()
+        list(APPEND LOCAL_SOURCES os/unix/unix.cpp)
     endif()
-    list(APPEND LOCAL_SOURCES os/unix/unix.cpp)
 endif()
 
 if(HAS_SSE)
@@ -891,15 +891,15 @@ list(APPEND LOCAL_SOURCES
     )
 
 # Blitters
-if(NOT DEDICATED)
-    list(APPEND LOCAL_SOURCES
-
+list(APPEND LOCAL_SOURCES
         blitter/base.cpp
         blitter/base.hpp
         blitter/factory.hpp
         blitter/null.cpp
         blitter/null.hpp
-
+        )
+if(NOT DEDICATED)
+    list(APPEND LOCAL_SOURCES
         blitter/8bpp_base.cpp
         blitter/8bpp_base.hpp
         blitter/8bpp_optimized.cpp
@@ -907,36 +907,24 @@ if(NOT DEDICATED)
         blitter/8bpp_simple.cpp
         blitter/8bpp_simple.hpp
 
-        blitter/32bpp_anim.cpp
-        blitter/32bpp_anim.hpp
         blitter/32bpp_base.cpp
         blitter/32bpp_base.hpp
         blitter/32bpp_optimized.cpp
         blitter/32bpp_optimized.hpp
         blitter/32bpp_simple.cpp
         blitter/32bpp_simple.hpp
-        )
 
+        blitter/32bpp_anim.cpp
+        blitter/32bpp_anim.hpp
+        )
     if(HAS_SSE)
         list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse_func.hpp
             blitter/32bpp_sse_type.h
-            )
-    endif()
-    if(HAS_SSE2)
-        list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse2.cpp
             blitter/32bpp_sse2.hpp
-            )
-    endif()
-    if (HAS_SSSE3)
-        list(APPEND LOCAL_SOURCES
             blitter/32bpp_ssse3.cpp
             blitter/32bpp_ssse3.hpp
-            )
-    endif()
-    if(HAS_SSE4)
-        list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse4.cpp
             blitter/32bpp_sse4.hpp
             blitter/32bpp_anim_sse4.cpp
@@ -1076,8 +1064,10 @@ list(APPEND LOCAL_SOURCES
     pathfinder/yapf/yapf_type.hpp
     )
 
-
+#
 # Video
+#
+
 list(APPEND LOCAL_SOURCES
     video/dedicated_v.cpp
     video/null_v.cpp
@@ -1090,12 +1080,15 @@ if(NOT DEDICATED)
     if(SDL_FOUND)
         list(APPEND LOCAL_SOURCES video/sdl_v.cpp)
     endif()
-    if(WIN32 OR WINCE)
+    if(WIN32)
         list(APPEND LOCAL_SOURCES video/win32_v.cpp)
     endif()
-endif()
+endif(NOT DEDICATED)
 
+#
 # Music
+#
+
 list(APPEND LOCAL_SOURCES
     music/null_m.cpp
     music/midifile.cpp
@@ -1114,15 +1107,20 @@ if(NOT DEDICATED)
     if(LIBTIMIDITY_FOUND)
         list(APPEND LOCAL_SOURCES music/libtimidity.cpp)
     endif()
+
     if(WIN32)
         list(APPEND LOCAL_SOURCES music/win32_m.cpp)
+    elseif(NOT DOS)
+        if( NOT MORPHOS)
+            list(APPEND LOCAL_SOURCES music/extmidi.cpp)
+        endif()
     endif()
-    if( NOT ( WIN32 OR WINCE OR PSP OR DOC OR MORPHOS ) )
-        list(APPEND LOCAL_SOURCES music/extmidi.cpp)
-    endif()
-endif()
+endif(NOT DEDICATED)
 
+#
 # Sound
+#
+
 list(APPEND LOCAL_SOURCES sound/null_s.cpp)
 if(NOT DEDICATED)
     if(ALLEGRO_FOUND)
@@ -1137,7 +1135,7 @@ if(NOT DEDICATED)
             sound/xaudio2_s.cpp
             )
     endif()
-endif()
+endif(NOT DEDICATED)
 
 if(APPLE)
     list(APPEND LOCAL_SOURCES os/macosx/macos.mm)
@@ -1146,38 +1144,34 @@ if(APPLE)
         list(APPEND LOCAL_SOURCES
             music/qtmidi.cpp
             )
-        end()
-
-        if(COCOA_FOUND)
-            list(APPEND LOCAL_SOURCES 
-                video/cocoa/cocoa_v.mm
-                video/cocoa/event.mm
-                video/cocoa/fullscreen.mm
-                video/cocoa/wnd_quartz.mm
-                video/cocoa/wnd_quickdraw.mm
-                music/cocoa_m.cpp
-                sound/cocoa_s.cpp
-                os/macosx/splash.cpp
-                )
-        endif()
     endif()
 
-    if(WIN32)
+    if(COCOA_FOUND)
         list(APPEND LOCAL_SOURCES 
-            os/windows/crashlog_win.cpp
-            os/windows/win32.cpp
+            video/cocoa/cocoa_v.mm
+            video/cocoa/event.mm
+            video/cocoa/fullscreen.mm
+            video/cocoa/wnd_quartz.mm
+            video/cocoa/wnd_quickdraw.mm
+            music/cocoa_m.cpp
+            sound/cocoa_s.cpp
+            os/macosx/splash.cpp
             )
     endif()
+endif(APPLE)
 
-    if(WINCE)
-        list(APPEND LOCAL_SOURCES 
-            os/windows/ottdres.rc
-            os/windows/win32.cpp
-            )
-    endif()
-endif()
+if(WIN32)
+    list(APPEND LOCAL_SOURCES 
+        os/windows/crashlog_win.cpp
+        os/windows/string_uniscribe.cpp
+        os/windows/win32.cpp
+        )
+endif(WIN32)
 
+#
 # Threading
+#
+
 list(APPEND LOCAL_SOURCES thread/thread.h)
 if(NOT HAVE_THREAD)
     list(APPEND LOCAL_SOURCES thread/thread_none.cpp)
