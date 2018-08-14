@@ -5,31 +5,55 @@
 #  FONTCONFIG_LIBRARIES, libraries to link against to use the FontConfig API.
 #  FONTCONFIG_FOUND, If false, do not try to use FontConfig.
 
-#=============================================================================
-# Copyright 2012 Kitware, Inc.
+
+
+# FindFontConfig
+# --------
+# Finds the FontConfig library
 #
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
+# This will will define the following variables::
 #
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
-#=============================================================================
-# (To distribute this file outside of VTK, substitute the full
-#  License text for the above reference.)
+# FONTCONFIG_FOUND - system has FontConfig
+# FONTCONFIG_INCLUDE_DIRS - the FontConfig include directory
+# FONTCONFIG_LIBRARIES - the FontConfig libraries
+#
+# and the following imported targets::
+#
+#   FontConfig::FontConfig - The FontConfig library
 
-find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h)
-
-find_library(FONTCONFIG_LIBRARY NAMES fontconfig)
-
-# handle the QUIETLY and REQUIRED arguments and set FONTCONFIG_FOUND to TRUE if
-# all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(FontConfig DEFAULT_MSG
-  FONTCONFIG_LIBRARY  FONTCONFIG_INCLUDE_DIR)
-
-if(FONTCONFIG_FOUND)
-  set( FONTCONFIG_LIBRARIES ${FONTCONFIG_LIBRARY} )
+if(PKG_CONFIG_FOUND)
+  pkg_check_modules(PC_FONTCONFIG fontconfig QUIET)
 endif()
 
-mark_as_advanced(FONTCONFIG_INCLUDE_DIR FONTCONFIG_LIBRARY FONTCONFIG_LIBRARIES)
+find_path(
+    FONTCONFIG_INCLUDE_DIR NAMES fontconfig/fontconfig.h
+    PATHS ${PC_FONTCONFIG_INCLUDEDIR}
+    )
+find_library(
+    FONTCONFIG_LIBRARY NAMES fontconfig
+    PATHS ${PC_FONTCONFIG_LIBDIR}
+    )
+
+set(FONTCONFIG_VERSION ${PC_FONTCONFIG_VERSION})
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(FONTCONFIG
+    REQUIRED_VARS FONTCONFIG_LIBRARY FONTCONFIG_INCLUDE_DIR
+    VERSION_VAR FONTCONFIG_VERSION)
+
+if(FONTCONFIG_FOUND)
+  set(FONTCONFIG_LIBRARIES ${FONTCONFIG_LIBRARY})
+
+  if(NOT TARGET FontConfig::FontConfig)
+    add_library(FontConfig::FontConfig UNKNOWN IMPORTED)
+    set_target_properties(FontConfig::FontConfig PROPERTIES
+        IMPORTED_LOCATION "${FONTCONFIG_LIBRARY}"
+        INTERFACE_INCLUDE_DIR ${FONTCONFIG_INCLUDE_DIR}
+        )
+  endif()
+endif()
+
+mark_as_advanced(FONTCONFIG_INCLUDE_DIR FONTCONFIG_LIBRARY)
+
+
+

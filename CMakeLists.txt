@@ -195,19 +195,40 @@ target_include_directories(openttd
     )
 
 
-# Add libraries to link to.
+# Add system libraries to link to.
+if(PNG_FOUND)
+    target_link_libraries(openttd PRIVATE PNG::PNG)
+endif()
+if(ZLIB_FOUND)
+    target_link_libraries(openttd PRIVATE ZLIB::ZLIB)
+endif()
+if(LZO2_FOUND)
+    target_link_libraries(openttd PRIVATE LZO2::LZO2)
+endif()
+if(LZMA_FOUND)
+    add_library(LZMA UNKNOWN IMPORTED)
+    target_link_libraries(LZMA INTERFACE LIBLZMA_LIBRARY)
+    target_include_directories(LZMA INTERFACE LIBLZMA_INCLUDE_DIR)
+
+    target_link_libraries(openttd PRIVATE LZMA)
+endif()
+if(Freetype_FOUND)
+    target_link_libraries(openttd PRIVATE Freetype::Freetype)
+endif()
+if(FontConfig_FOUND)
+    target_link_libraries(openttd PRIVATE FontConfig::FontConfig)
+endif()
+if(ICU_FOUND)
+    # Use the ICU unicode library
+    target_link_libraries(openttd PRIVATE ICU::uc)
+endif()
+if(Allegro_FOUND)
+    target_link_libraries(openttd PRIVATE Allegro::Allegro)
+endif()
+
+# Add third party libraries to link to.
 target_link_libraries(openttd
     PRIVATE
-    png
-    zlib
-    LZO2::LZO2
-    lzma
-    freetype
-    fontconfig
-    icu
-    sdl
-    allegro
-    # Third party libraries
     Squirrel
     SqStdLib
     MD5
