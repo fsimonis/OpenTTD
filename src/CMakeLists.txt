@@ -116,7 +116,6 @@ if(OS2)
     list(APPEND LOCAL_SOURCES
         os/os2/os2.cpp
         )
-    target_link_libraries(openttd PRIVATE OS2)
 endif()
 
 if(UNIX)
@@ -1134,7 +1133,7 @@ if(APPLE)
             )
         end()
 
-        if(COCOA_FOUNC)
+        if(COCOA_FOUND)
             list(APPEND LOCAL_SOURCES 
                 video/cocoa/cocoa_v.mm
                 video/cocoa/event.mm

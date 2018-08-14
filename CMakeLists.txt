@@ -11,6 +11,7 @@ endif()
 
 cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
 
+find_package(Threads)
 find_package(PNG)
 find_package(ZLIB)
 find_package(LZO2)
@@ -22,6 +23,12 @@ find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
 
+#
+# Options and Cached Variables
+#
+
+option(DEDICATED "build dedicated server" OFF)
+
 if(NOT CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
@@ -32,6 +39,20 @@ set(OPENTTD_REL_ICON_DIR "share/pixmaps" CACHE STRING "relative to prefix")
 set(OPENTTD_BINARY_DIR "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_BINARY_DIR}")
 set(OPENTTD_DATA_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_DATA_DIR}")
 set(OPENTTD_ICON_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_ICON_DIR}")
+
+# TODO
+
+option(HAVE_THREAD "has sse?" ON)
+option(HAS_SSE "has sse?" ON)
+option(HAS_SSE2 "has sse2?" ON)
+option(HAS_SSSE3 "has ssse3?" ON)
+option(HAS_SSE4 "has sse4?" ON)
+option(DIRECTMUSIC_FOUND "has sse4?" ON)
+option(BEOS_FOUND "has sse4?" OFF)
+option(LIBTIMIDITY_FOUND "has sse4?" OFF)
+option(PSP "has sse4?" ON)
+
+
 
 # Detect Version, Modified and Date
 include(cmake/DetectVersion.cmake)
@@ -196,6 +217,10 @@ target_include_directories(openttd
 
 
 # Add detected system libraries to link to.
+if(OS2)
+    target_link_libraries(openttd PRIVATE OS2)
+endif()
+
 if(PNG_FOUND)
     target_link_libraries(openttd PRIVATE PNG::PNG)
 endif()
@@ -238,6 +263,7 @@ target_link_libraries(openttd
     Squirrel
     SqStdLib
     MD5
+    Threads::Threads
     )
 
 # Explicitly add the dependency to the version configuration.
@@ -248,9 +274,6 @@ target_sources(openttd
     src/table/strings.h
     ${LANGUAGE_LNG_FILES}
     )
-
-# Add the objects subtree
-# add_subdirectory(objs)
 
 # TODO: Add the documentation subtree
 # add_subdirectory(doc)
