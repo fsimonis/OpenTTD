@@ -122,7 +122,7 @@ file(GLOB LANGUAGE_FILES src/lang/*.txt)
 set(LANGUAGE_LNG_FILES "")
 foreach(LANGUAGE_FILE ${LANGUAGE_FILES})
     get_filename_component(LANGUAGE "${LANGUAGE_FILE}" NAME_WE)
-    list(APPEND LANGUAGE_LNG_FILES "objs/lang/${LANGUAGE}.lng")
+    list(APPEND LANGUAGE_LNG_FILES "${CMAKE_CURRENT_BINARY_DIR}/objs/lang/${LANGUAGE}.lng")
     add_custom_command(
         OUTPUT objs/lang/${LANGUAGE}.lng
         COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/objs/lang ${LANGUAGE_FILE}
@@ -266,14 +266,21 @@ target_link_libraries(openttd
     Threads::Threads
     )
 
-# Explicitly add the dependency to the version configuration.
-# add_dependencies(openttd configure_version)
 
+#
+# Adding explicit dependencies to generated source files
+#
 target_sources(openttd
     PRIVATE
-    src/table/strings.h
     ${LANGUAGE_LNG_FILES}
+    ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h
+    ${CMAKE_CURRENT_BINARY_DIR}/src/table/strings.h
     )
+if(APPLE AND WIN32)
+    target_sources(openttd PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp)
+endif()
+
 
 # TODO: Add the documentation subtree
 # add_subdirectory(doc)

@@ -78,7 +78,6 @@ list(APPEND LOCAL_SOURCES
     pbs.cpp
     progress.cpp
     rail.cpp
-    rev.cpp
     road.cpp
     roadstop.cpp
     screenshot.cpp
@@ -1166,7 +1165,6 @@ if(APPLE)
     if(WIN32)
         list(APPEND LOCAL_SOURCES 
             os/windows/crashlog_win.cpp
-            os/windows/ottdres.rc
             os/windows/win32.cpp
             )
     endif()
@@ -1213,9 +1211,3 @@ unset(LOCAL_SOURCES_TMP)
 # Add sources to target openttd
 target_sources(openttd PRIVATE ${LOCAL_SOURCES})
 unset(LOCAL_SOURCES)
-
-#
-# Adding dependencies to generated source files
-#
-
-target_sources(openttd PRIVATE src/table/settings.h)
