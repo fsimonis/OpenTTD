@@ -122,15 +122,15 @@ file(GLOB LANGUAGE_FILES src/lang/*.txt)
 set(LANGUAGE_LNG_FILES "")
 foreach(LANGUAGE_FILE ${LANGUAGE_FILES})
     get_filename_component(LANGUAGE "${LANGUAGE_FILE}" NAME_WE)
-    list(APPEND LANGUAGE_LNG_FILES "${CMAKE_CURRENT_BINARY_DIR}/objs/lang/${LANGUAGE}.lng")
+    list(APPEND LANGUAGE_LNG_FILES "${CMAKE_CURRENT_BINARY_DIR}/lang/${LANGUAGE}.lng")
     add_custom_command(
-        OUTPUT objs/lang/${LANGUAGE}.lng
-        COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/objs/lang ${LANGUAGE_FILE}
+        OUTPUT lang/${LANGUAGE}.lng
+        COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/lang ${LANGUAGE_FILE}
         DEPENDS string_gen ${LANGUAGE_FILE}
         COMMENT Generating Language: ${LANGUAGE}
         )
 endforeach()
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/objs/lang")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
 
 #
 # Settings generator
@@ -235,8 +235,10 @@ endif()
 
 if(LZMA_FOUND)
     add_library(LZMA UNKNOWN IMPORTED)
-    target_link_libraries(LZMA INTERFACE LIBLZMA_LIBRARY)
-    target_include_directories(LZMA INTERFACE LIBLZMA_INCLUDE_DIR)
+    set_target_properties(LZMA PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES ${LIBLZMA_LIBRARY}
+        INTERFACE_LINK_LIBRARIES ${LIBLZMA_INCLUDE_DIR}
+        )
 
     target_link_libraries(openttd PRIVATE LZMA)
 endif()
@@ -253,8 +255,19 @@ if(ICU_FOUND)
     # Use the ICU unicode library
     target_link_libraries(openttd PRIVATE ICU::uc)
 endif()
+
 if(Allegro_FOUND)
     target_link_libraries(openttd PRIVATE Allegro::Allegro)
+endif()
+
+if(SDL_FOUND)
+    add_library(SDL UNKNOWN IMPORTED)
+    set_target_properties(SDL PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES ${SDL_INCLUDE_DIR}
+        INTERFACE_LINK_LIBRARIES ${SDL_LIBRARY}
+    )
+
+    target_link_libraries(openttd PRIVATE SDL)
 endif()
 
 # Add third party libraries to link to.

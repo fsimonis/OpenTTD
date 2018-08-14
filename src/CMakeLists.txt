@@ -108,7 +108,7 @@ list(APPEND LOCAL_SOURCES
     window.cpp
     )
 
-if(SLD_FOUND)
+if(SDL_FOUND)
     list(APPEND LOCAL_SOURCES sdl.cpp)
 endif()
 
@@ -137,7 +137,7 @@ endif()
 # Header Files
 #
 
-if (ALLEGRO_FOUND)
+if (Allegro_FOUND)
     list(APPEND LOCAL_SOURCES
         music/allegro_m.h
         sound/allegro_s.h
@@ -1074,7 +1074,7 @@ list(APPEND LOCAL_SOURCES
     )
 
 if(NOT DEDICATED)
-    if(ALLEGRO_FOUND)
+    if(Allegro_FOUND)
         list(APPEND LOCAL_SOURCES video/allegro_v.cpp)
     endif()
     if(SDL_FOUND)
@@ -1095,7 +1095,7 @@ list(APPEND LOCAL_SOURCES
     )
 
 if(NOT DEDICATED)
-    if(ALLEGRO_FOUND)
+    if(Allegro_FOUND)
         list(APPEND LOCAL_SOURCES music/allegro_m.cpp)
     endif()
     if(DIRECTMUSIC_FOUND)
@@ -1123,7 +1123,7 @@ endif(NOT DEDICATED)
 
 list(APPEND LOCAL_SOURCES sound/null_s.cpp)
 if(NOT DEDICATED)
-    if(ALLEGRO_FOUND)
+    if(Allegro_FOUND)
         list(APPEND LOCAL_SOURCES sound/allegro_s.cpp)
     endif()
     if(SDL_FOUND)
