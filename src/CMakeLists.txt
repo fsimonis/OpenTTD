@@ -39,6 +39,7 @@ list(APPEND LOCAL_SOURCES
     fios.cpp
     fontcache.cpp
     fontdetection.cpp
+    framerate_type.h
     base_consist.cpp
     gamelog.cpp
     genworld.cpp
@@ -301,6 +302,8 @@ list(APPEND LOCAL_SOURCES
     news_func.h
     news_gui.h
     news_type.h
+    music/midi.h
+    music/midifile.hpp
     music/null_m.h
     sound/null_s.h
     video/null_v.h
@@ -414,6 +417,7 @@ list(APPEND LOCAL_SOURCES
     window_func.h
     window_gui.h
     window_type.h
+    sound/xaudio2_s.h
     zoom_func.h
     zoom_type.h
     )
@@ -482,6 +486,7 @@ list(APPEND LOCAL_SOURCES
     engine_gui.cpp
     error_gui.cpp
     fios_gui.cpp
+    framerate_gui.cpp
     genworld_gui.cpp
     goal_gui.cpp
     graph_gui.cpp
@@ -545,6 +550,7 @@ list(APPEND LOCAL_SOURCES
     widgets/engine_widget.h
     widgets/error_widget.h
     widgets/fios_widget.h
+    widgets/framerate_widget.h
     widgets/genworld_widget.h
     widgets/goal_widget.h
     widgets/graph_widget.h
@@ -759,6 +765,8 @@ list(APPEND LOCAL_SOURCES
     script/api/script_cargo.hpp
     script/api/script_cargolist.hpp
     script/api/script_cargomonitor.hpp
+    script/api/script_client.hpp
+    script/api/script_clientlist.hpp
     script/api/script_company.hpp
     script/api/script_companymode.hpp
     script/api/script_controller.hpp
@@ -826,6 +834,8 @@ list(APPEND LOCAL_SOURCES
     script/api/script_cargo.cpp
     script/api/script_cargolist.cpp
     script/api/script_cargomonitor.cpp
+    script/api/script_client.cpp
+    script/api/script_clientlist.cpp
     script/api/script_company.cpp
     script/api/script_companymode.cpp
     script/api/script_controller.cpp
@@ -1087,7 +1097,10 @@ if(NOT DEDICATED)
 endif()
 
 # Music
-list(APPEND LOCAL_SOURCES music/null_m.cpp)
+list(APPEND LOCAL_SOURCES
+    music/null_m.cpp
+    music/midifile.cpp
+    )
 
 if(NOT DEDICATED)
     if(ALLEGRO_FOUND)
@@ -1120,7 +1133,10 @@ if(NOT DEDICATED)
         list(APPEND LOCAL_SOURCES sound/sdl_s.cpp)
     endif()
     if(WIN32)
-        list(APPEND LOCAL_SOURCES sound/win32_s.cpp)
+        list(APPEND LOCAL_SOURCES
+            sound/win32_s.cpp
+            sound/xaudio2_s.cpp
+            )
     endif()
 endif()
 
