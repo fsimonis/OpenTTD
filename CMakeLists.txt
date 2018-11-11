@@ -19,6 +19,7 @@ find_package(LibLZMA)
 find_package(Freetype)
 find_package(FontConfig)
 # find_package(ICU REQUIRED)
+set(SDL_BUILDING_LIBRARY "TRUE")
 find_package(SDL)
 find_package(Allegro)
 find_package(Cocoa)
@@ -44,13 +45,11 @@ set(OPENTTD_ICON_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_ICON_DIR}")
 
 option(HAVE_THREAD "has sse?" ON)
 option(HAS_SSE "has sse?" ON)
-option(HAS_SSE2 "has sse2?" ON)
-option(HAS_SSSE3 "has ssse3?" ON)
-option(HAS_SSE4 "has sse4?" ON)
+
 option(DIRECTMUSIC_FOUND "has sse4?" ON)
 option(BEOS_FOUND "has sse4?" OFF)
 option(LIBTIMIDITY_FOUND "has sse4?" OFF)
-option(PSP "has sse4?" ON)
+option(PSP "has sse4?" OFF)
 
 
 
@@ -263,8 +262,8 @@ endif()
 if(SDL_FOUND)
     add_library(SDL UNKNOWN IMPORTED)
     set_target_properties(SDL PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${SDL_INCLUDE_DIR}
-        INTERFACE_LINK_LIBRARIES ${SDL_LIBRARY}
+        INTERFACE_INCLUDE_DIRECTORIES "${SDL_INCLUDE_DIR}"
+        INTERFACE_LINK_LIBRARIES "${SDL_LIBRARY}"
     )
 
     target_link_libraries(openttd PRIVATE SDL)
