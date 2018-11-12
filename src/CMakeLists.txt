@@ -108,7 +108,7 @@ list(APPEND LOCAL_SOURCES
     window.cpp
     )
 
-if(SDL_FOUND)
+if(OPENTTD_SDL)
     list(APPEND LOCAL_SOURCES sdl.cpp)
 endif()
 
@@ -127,7 +127,7 @@ if(NOT WIN32)
     endif()
 endif()
 
-if(HAS_SSE)
+if(OPENTTD_SSE)
     list(APPEND LOCAL_SOURCES
         viewport_sprite_sorter_sse4.cpp
         )
@@ -137,7 +137,7 @@ endif()
 # Header Files
 #
 
-if (Allegro_FOUND)
+if (OPENTTD_ALLEGRO)
     list(APPEND LOCAL_SOURCES
         music/allegro_m.h
         sound/allegro_s.h
@@ -917,7 +917,7 @@ if(NOT DEDICATED)
         blitter/32bpp_anim.cpp
         blitter/32bpp_anim.hpp
         )
-    if(HAS_SSE)
+    if(OPENTTD_SSE)
         list(APPEND LOCAL_SOURCES
             blitter/32bpp_sse_func.hpp
             blitter/32bpp_sse_type.h
@@ -927,6 +927,8 @@ if(NOT DEDICATED)
             blitter/32bpp_ssse3.hpp
             blitter/32bpp_sse4.cpp
             blitter/32bpp_sse4.hpp
+            blitter/32bpp_anim_sse2.cpp
+            blitter/32bpp_anim_sse2.hpp
             blitter/32bpp_anim_sse4.cpp
             blitter/32bpp_anim_sse4.hpp
             )
@@ -1074,10 +1076,10 @@ list(APPEND LOCAL_SOURCES
     )
 
 if(NOT DEDICATED)
-    if(Allegro_FOUND)
+    if(OPENTTD_ALLEGRO)
         list(APPEND LOCAL_SOURCES video/allegro_v.cpp)
     endif()
-    if(SDL_FOUND)
+    if(OPENTTD_SDL)
         list(APPEND LOCAL_SOURCES video/sdl_v.cpp)
     endif()
     if(WIN32)
@@ -1095,16 +1097,16 @@ list(APPEND LOCAL_SOURCES
     )
 
 if(NOT DEDICATED)
-    if(Allegro_FOUND)
+    if(OPENTTD_ALLEGRO)
         list(APPEND LOCAL_SOURCES music/allegro_m.cpp)
     endif()
-    if(DIRECTMUSIC_FOUND)
+    if(OPENTTD_DIRECT_MUSIC)
         list(APPEND LOCAL_SOURCES music/dmusic.cpp)
     endif()
-    if(BEOS_FOUND)
+    if(BEOS)
         list(APPEND LOCAL_SOURCES music/bemidi.cpp)
     endif()
-    if(LIBTIMIDITY_FOUND)
+    if(OPENTTD_LIBTIMIDITY)
         list(APPEND LOCAL_SOURCES music/libtimidity.cpp)
     endif()
 
@@ -1123,10 +1125,10 @@ endif(NOT DEDICATED)
 
 list(APPEND LOCAL_SOURCES sound/null_s.cpp)
 if(NOT DEDICATED)
-    if(Allegro_FOUND)
+    if(OPENTTD_ALLEGRO)
         list(APPEND LOCAL_SOURCES sound/allegro_s.cpp)
     endif()
-    if(SDL_FOUND)
+    if(OPENTTD_SDL)
         list(APPEND LOCAL_SOURCES sound/sdl_s.cpp)
     endif()
     if(WIN32)
@@ -1146,7 +1148,7 @@ if(APPLE)
             )
     endif()
 
-    if(COCOA_FOUND)
+    if(OPENTTD_COCOA)
         list(APPEND LOCAL_SOURCES 
             video/cocoa/cocoa_v.mm
             video/cocoa/event.mm
@@ -1173,7 +1175,7 @@ endif(WIN32)
 #
 
 list(APPEND LOCAL_SOURCES thread/thread.h)
-if(NOT HAVE_THREAD)
+if(NOT OPENTTD_THREAD)
     list(APPEND LOCAL_SOURCES thread/thread_none.cpp)
 else()
     if(WIN32)

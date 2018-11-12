@@ -1,34 +1,27 @@
 cmake_minimum_required(VERSION 3.8)
-project(openttd VERSION 1.7.2 LANGUAGES CXX)
+project(openttd VERSION 1.7.2 LANGUAGES CXX C)
 
 # Also search the project cmake directory for modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
+#
+# Extended Host Support
+#
+
 # Detect OS2
 if (CMAKE_SYSTEM_NAME EQUAL "OS2")
-    set(OS2 "yes")
+    set(OS2 YES)
 endif()
 
-cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
+# Option for PSP
+option(PSP "Target PSP?" OFF)
 
-find_package(Threads)
-find_package(PNG)
-find_package(ZLIB)
-find_package(LZO2)
-find_package(LibLZMA)
-find_package(Freetype)
-find_package(FontConfig)
-# find_package(ICU REQUIRED)
-set(SDL_BUILDING_LIBRARY "TRUE")
-find_package(SDL)
-find_package(Allegro)
-find_package(Cocoa)
+# Option for BeOS
+option(BEOS "Target BeOS?" OFF)
 
 #
 # Options and Cached Variables
 #
-
-option(DEDICATED "build dedicated server" OFF)
 
 if(NOT CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
@@ -36,22 +29,122 @@ endif()
 set(OPENTTD_REL_BINARY_DIR "games" CACHE STRING "relative to prefix")
 set(OPENTTD_REL_DATA_DIR "share/games/openttd" CACHE STRING "relative to prefix")
 set(OPENTTD_REL_ICON_DIR "share/pixmaps" CACHE STRING "relative to prefix")
+set(OPENTTD_PERSONAL_DIR "" CACHE STRING "The personal directory to use.")
 
 set(OPENTTD_BINARY_DIR "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_BINARY_DIR}")
 set(OPENTTD_DATA_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_DATA_DIR}")
 set(OPENTTD_ICON_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_ICON_DIR}")
 
-# TODO
+# Migrated options from config.lib
 
-option(HAVE_THREAD "has sse?" ON)
-option(HAS_SSE "has sse?" ON)
+option(OPENTTD_DEDICATED "build dedicated server" OFF)
+option(OPENTTD_OSX_SYSROOT        "Compile with osx_sysroot"        ON)
+option(OPENTTD_APPLICATION_BUNDLE "Compile with application_bundle" ON)
+option(OPENTTD_MENU_ENTRY         "Compile with menu_entry"         ON)
+option(OPENTTD_ALLEGRO            "Compile with allegro"            ON)
+option(OPENTTD_SDL                "Compile with sdl"                ON)
+option(OPENTTD_COCOA              "Compile with cocoa"              ON)
+option(OPENTTD_ZLIB               "Compile with zlib"               ON)
+option(OPENTTD_LZMA               "Compile with lzma"               ON)
+option(OPENTTD_LZO2               "Compile with lzo2"               ON)
+option(OPENTTD_XDG_BASEDIR        "Compile with xdg_basedir"        ON)
+option(OPENTTD_PNG                "Compile with png"                ON)
+option(OPENTTD_MAKEDEPEND         "Compile with makedepend"         OFF)
+option(OPENTTD_DIRECT_MUSIC       "Compile with direct_music"       ON)
+option(OPENTTD_XAUDIO2            "Compile with xaudio2"            ON)
+option(OPENTTD_SORT               "Compile with sort"               ON)
+option(OPENTTD_ICONV              "Compile with iconv"              ON)
+option(OPENTTD_ICONV_NON_CONST    "Is the iconv implementation non-const?" ON)
+option(OPENTTD_LIBTIMIDITY        "Compile with libtimidity"        ON)
+option(OPENTTD_FREETYPE           "Compile with freetype"           ON)
+option(OPENTTD_FONTCONFIG         "Compile with fontconfig"         ON)
+option(OPENTTD_ICU_LAYOUT         "Compile with icu_layout"         ON)
+option(OPENTTD_ICU_SORT           "Compile with icu_sort"           ON)
+option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON)
+option(OPENTTD_THREADS            "Compile with threads"            ON)
+option(OPENTTD_DISTCC             "Compile with distcc"             ON)
+option(OPENTTD_CCACHE             "Compile with ccache"             ON)
+option(OPENTTD_NFORENUM           "Compile with nforenum"           ON)
+option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON)
+option(OPENTTD_SSE                "Compile with sse"                ON)
 
-option(DIRECTMUSIC_FOUND "has sse4?" ON)
-option(BEOS_FOUND "has sse4?" OFF)
-option(LIBTIMIDITY_FOUND "has sse4?" OFF)
-option(PSP "has sse4?" OFF)
+if(OPENTTD_DIRECT_MUSIC)
+    # TODO Implement Direct Music Support
+    message(FATAL_ERROR "Direct Music is not supported as FindLibrary!")
+endif(OPENTTD_DIRECT_MUSIC)
+
+if(OPENTTD_LIBTIMIDITY)
+    # TODO Implement libtimitdity
+    message(FATAL_ERROR "libtimitdity is not supported as FindLibrary!")
+endif(OPENTTD_LIBTIMIDITY)
 
 
+if(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
+    find_package(ICU REQUIRED)
+endif(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
+
+if(OPENTTD_SDL)
+    find_package(SDL REQUIRED)
+    add_library(SDL INTERFACE)
+    set_target_properties(SDL PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${SDL_INCLUDE_DIR}"
+        INTERFACE_LINK_LIBRARIES "${SDL_LIBRARY}"
+    )
+endif(OPENTTD_SDL)
+
+if(OPENTTD_ALLEGRO)
+find_package(Allegro REQUIRED)
+endif(OPENTTD_ALLEGRO)
+
+if(OPENTTD_COCOA)
+find_package(Cocoa REQUIRED)
+endif(OPENTTD_COCOA)
+
+if(OPENTTD_PNG)
+    find_package(PNG REQUIRED)
+endif(OPENTTD_PNG)
+
+if(OPENTTD_ZLIB)
+    find_package(ZLIB REQUIRED)
+endif(OPENTTD_ZLIB)
+
+if(OPENTTD_LZO2)
+    find_package(LZO2 REQUIRED)
+endif(OPENTTD_LZO2)
+
+if(OPENTTD_LZMA)
+    find_package(LibLZMA REQUIRED)
+    add_library(LZMA INTERFACE)
+    set_target_properties(LZMA PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBLZMA_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${LIBLZMA_LIBRARIES}"
+        )
+endif(OPENTTD_LZMA)
+
+if(OPENTTD_FREETYPE)
+    find_package(Freetype REQUIRED)
+endif(OPENTTD_FREETYPE)
+
+if(OPENTTD_FONTCONFIG)
+    find_package(FontConfig REQUIRED)
+endif(OPENTTD_FONTCONFIG)
+
+if(OPENTTD_UNISCRIBE)
+    find_package(Uniscribe REQUIRED)
+endif(OPENTTD_UNISCRIBE)
+
+if(OPENTTD_THREADS)
+    find_package(Threads REQUIRED)
+endif(OPENTTD_THREADS)
+
+if(OPENTTD_SSE)
+    # Query host system for sse support
+    cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
+    if(NOT HAS_SSE)
+        message(WARNING "SSE support requested, but not supported by host system!")
+    endif(NOT HAS_SSE)
+    #TODO Verify that compiler uses native or msse...
+endif(OPENTTD_SSE)
 
 # Detect Version, Modified and Date
 include(cmake/DetectVersion.cmake)
@@ -215,58 +308,96 @@ target_include_directories(openttd
     )
 
 
-# Add detected system libraries to link to.
+#
+# Link to libraries
+#
+
+
 if(OS2)
     target_link_libraries(openttd PRIVATE OS2)
 endif()
 
-if(PNG_FOUND)
+if(OPENTTD_PNG)
     target_link_libraries(openttd PRIVATE PNG::PNG)
+target_compile_definitions(openttd PRIVATE WITH_PNG)
 endif()
 
-if(ZLIB_FOUND)
+if(OPENTTD_ZLIB)
     target_link_libraries(openttd PRIVATE ZLIB::ZLIB)
+target_compile_definitions(openttd PRIVATE WITH_ZLIB)
 endif()
 
-if(LZO2_FOUND)
+if(OPENTTD_LZO2)
     target_link_libraries(openttd PRIVATE LZO2::LZO2)
+target_compile_definitions(openttd PRIVATE WITH_LZO)
 endif()
 
-if(LZMA_FOUND)
-    add_library(LZMA UNKNOWN IMPORTED)
-    set_target_properties(LZMA PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${LIBLZMA_LIBRARY}
-        INTERFACE_LINK_LIBRARIES ${LIBLZMA_INCLUDE_DIR}
-        )
-
+if(OPENTTD_LZMA)
     target_link_libraries(openttd PRIVATE LZMA)
+target_compile_definitions(openttd PRIVATE WITH_LZMA)
 endif()
 
-if(Freetype_FOUND)
+if(OPENTTD_FREETYPE)
     target_link_libraries(openttd PRIVATE Freetype::Freetype)
+target_compile_definitions(openttd PRIVATE WITH_FREETYPE)
 endif()
 
-if(FontConfig_FOUND)
+if(OPENTTD_FONTCONFIG)
+target_compile_definitions(openttd PRIVATE WITH_FONTCONFIG)
     target_link_libraries(openttd PRIVATE FontConfig::FontConfig)
 endif()
 
-if(ICU_FOUND)
-    # Use the ICU unicode library
+if(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
     target_link_libraries(openttd PRIVATE ICU::uc)
+    if(OPENTTD_ICU_LAYOUT)
+        target_compile_definitions(openttd PRIVATE WITH_ICU_LAYOUT)
+    endif()
+    if(OPENTTD_ICU_SORT)
+        target_compile_definitions(openttd PRIVATE WITH_ICU_SORT)
+    endif()
 endif()
 
-if(Allegro_FOUND)
+if(OPENTTD_ALLEGRO)
     target_link_libraries(openttd PRIVATE Allegro::Allegro)
+    target_compile_definitions(openttd PRIVATE WITH_ALLEGRO)
 endif()
 
-if(SDL_FOUND)
-    add_library(SDL UNKNOWN IMPORTED)
-    set_target_properties(SDL PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${SDL_INCLUDE_DIR}"
-        INTERFACE_LINK_LIBRARIES "${SDL_LIBRARY}"
-    )
-
+if(OPENTTD_SDL)
+    target_compile_definitions(openttd PRIVATE WITH_SDL)
     target_link_libraries(openttd PRIVATE SDL)
+endif()
+
+if(OPENTTD_COCOA)
+    target_compile_definitions(openttd PRIVATE WITH_COCOA)
+    target_link_libraries(openttd PRIVATE COCOA)
+endif()
+
+if(OPENTTD_SSE)
+    target_compile_definitions(openttd PRIVATE WITH_SSE)
+endif()
+
+if(OPENTTD_ICONV)
+    target_compile_definitions(openttd PRIVATE WITH_ICONV)
+    if(OPENTTD_ICONV_NON_CONST)
+        target_compile_definitions(openttd PRIVATE HAVE_NON_CONST_ICONV)
+    endif()
+endif()
+
+if(OPENTTD_PERSONAL_DIR)
+    target_compile_definitions(openttd PRIVATE WITH_PERSONAL_DIR)
+endif()
+
+if(OPENTTD_XDG_BASEDIR)
+    target_compile_definitions(openttd PRIVATE WITH_XDG_BASEDIR)
+endif()
+
+if(OPENTTD_UNISCRIBE)
+    target_link_libraries(openttd PRIVATE UNISCRIBE::UNISCRIBE)
+    target_compile_definitions(openttd PRIVATE WITH_UNISCRIBE)
+endif()
+
+if(OPENTTD_XAUDIO2)
+    target_compile_definitions(openttd PRIVATE WITH_XAUDIO2)
 endif()
 
 # Add third party libraries to link to.
@@ -277,7 +408,6 @@ target_link_libraries(openttd
     MD5
     Threads::Threads
     )
-
 
 #
 # Adding explicit dependencies to generated source files
@@ -292,7 +422,6 @@ target_sources(openttd
 if(APPLE AND WIN32)
     target_sources(openttd PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp)
 endif()
-
 
 # TODO: Add the documentation subtree
 # add_subdirectory(doc)

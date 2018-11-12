@@ -1,3 +1,5 @@
 add_subdirectory(squirrel)
 add_subdirectory(md5)
-add_subdirectory(os2)
+if(OS2)
+    add_subdirectory(os2)
+endif(OS2)
