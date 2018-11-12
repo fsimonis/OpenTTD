@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(openttd VERSION 1.7.2 LANGUAGES CXX C)
 
+include(cmake/PrintTargetProperties.cmake)
+
 # Also search the project cmake directory for modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -138,12 +140,9 @@ if(OPENTTD_THREADS)
 endif(OPENTTD_THREADS)
 
 if(OPENTTD_SSE)
-    # Query host system for sse support
-    cmake_host_system_information(RESULT HAS_SSE QUERY HAS_SSE)
-    if(NOT HAS_SSE)
-        message(WARNING "SSE support requested, but not supported by host system!")
-    endif(NOT HAS_SSE)
-    #TODO Verify that compiler uses native or msse...
+    # Check that the compiler has intrinsics enabled
+    include(cmake/CheckSSE.cmake)
+    check_sse()
 endif(OPENTTD_SSE)
 
 # Detect Version, Modified and Date
