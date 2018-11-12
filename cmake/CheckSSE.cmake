@@ -1,3 +1,11 @@
+#
+# Author: Frédéric Simonis
+#
+# This file contains the function check_sse, which tries to compile a test program
+# using the current compiler configuration.
+# It raises an error if support for sse is not detected.
+#
+
 function(check_sse)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/check_sse)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/check_sse/test.cpp "
