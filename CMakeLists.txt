@@ -158,6 +158,9 @@ configure_file(src/os/windows/ottdres.rc.in src/os/windows/ottdres.rc @ONLY)
 # MENU_NAME TTD MENU_GROUP
 configure_file(media/openttd.desktop.in media/openttd.desktop @ONLY)
 
+# Copy baseset
+file(COPY bin/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 
 #
 # Strings generator
