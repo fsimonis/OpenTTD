@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(openttd VERSION 1.7.2 LANGUAGES CXX C)
 
-include(cmake/PrintTargetProperties.cmake)
-
 # Also search the project cmake directory for modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
