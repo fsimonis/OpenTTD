@@ -400,6 +400,11 @@ if(OPENTTD_XAUDIO2)
     target_compile_definitions(openttd PRIVATE WITH_XAUDIO2)
 endif()
 
+# Add compiler definitions for OS support
+if(UNIX)
+    target_compile_definitions(openttd PRIVATE UNIX)
+endif()
+
 # Add third party libraries to link to.
 target_link_libraries(openttd
     PRIVATE
