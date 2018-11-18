@@ -78,7 +78,6 @@ if(OPENTTD_LIBTIMIDITY)
     message(FATAL_ERROR "libtimitdity is not supported as FindLibrary!")
 endif(OPENTTD_LIBTIMIDITY)
 
-
 if(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
     find_package(ICU REQUIRED)
 endif(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
@@ -93,11 +92,11 @@ if(OPENTTD_SDL)
 endif(OPENTTD_SDL)
 
 if(OPENTTD_ALLEGRO)
-find_package(Allegro REQUIRED)
+    find_package(Allegro REQUIRED)
 endif(OPENTTD_ALLEGRO)
 
 if(OPENTTD_COCOA)
-find_package(Cocoa REQUIRED)
+    find_package(Cocoa REQUIRED)
 endif(OPENTTD_COCOA)
 
 if(OPENTTD_PNG)
