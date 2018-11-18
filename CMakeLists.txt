@@ -419,9 +419,7 @@ target_sources(openttd
     ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h
     ${CMAKE_CURRENT_BINARY_DIR}/src/table/strings.h
     )
-if(APPLE AND WIN32)
-    target_sources(openttd PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp)
-endif()
+target_sources(openttd PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp)
 
 # TODO: Add the documentation subtree
 # add_subdirectory(doc)
