@@ -1,51 +1,49 @@
-# - Find allegro
-# Find the native ALLEGRO includes and library
+# This module defines the following variables:
 #
-# ALLEGRO_INCLUDE_DIR - where to find allegro.h, etc.
-# ALLEGRO_LIBRARIES - List of libraries when using allegro.
-# ALLEGRO_FOUND - True if allegro found.
+# ALLEGRO_FOUND
+#   True if ALLEGRO found.
+#
+# ALLEGRO_INCLUDE_DIRS
+#   where to find usp10.h
+#
+# ALLEGRO_LIBRARIES
+#   The library usp10
+#
+# This module exports the following IMPORTED target:
+#
+# ALLEGRO::ALLEGRO
 
 
-IF (ALLEGRO_INCLUDE_DIR)
-    # Already in cache, be silent
-    SET(ALLEGRO_FIND_QUIETLY TRUE)
-ENDIF (ALLEGRO_INCLUDE_DIR)
+find_path(ALLEGRO_INCLUDE_DIR NAMES allegro.h
+    PATH_SUFFIXES allegro4 allegro
+    HINTS $ENV{MINGDIR}/include
+    )
+mark_as_advanced(ALLEGRO_INCLUDE_DIR)
 
-FIND_PATH(ALLEGRO_INCLUDE_DIR allegro.h
-/usr/local/include
-/usr/include
-$ENV{MINGDIR}/include
-)
+find_library(ALLEGRO_LIBRARY
+    NAMES alleg alleglib alleg41 alleg42 allegdll allegro liballegro
+    HINTS $ENV{MINGDIR}/lib)
+mark_as_advanced(ALLEGRO_LIBRARY)
 
-if(UNIX AND NOT CYGWIN)
-    exec_program(allegro-config ARGS --libs OUTPUT_VARIABLE ALLEGRO_LIBRARY)
-else(UNIX AND NOT CYGWIN)
-    SET(ALLEGRO_NAMES alleg alleglib alleg41 alleg42 allegdll)
-    FIND_LIBRARY(ALLEGRO_LIBRARY
-        NAMES ${ALLEGRO_NAMES}
-        PATHS /usr/lib /usr/local/lib $ENV{MINGDIR}/lib)
-endif(UNIX AND NOT CYGWIN)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(ALLEGRO
+    REQUIRED_VARS ALLEGRO_INCLUDE_DIR ALLEGRO_LIBRARY)
 
-IF (ALLEGRO_INCLUDE_DIR AND ALLEGRO_LIBRARY)
-    SET(ALLEGRO_FOUND TRUE)
-    SET( ALLEGRO_LIBRARIES ${ALLEGRO_LIBRARY} )
-ELSE (ALLEGRO_INCLUDE_DIR AND ALLEGRO_LIBRARY)
-    SET(ALLEGRO_FOUND FALSE)
-    SET( ALLEGRO_LIBRARIES )
-ENDIF (ALLEGRO_INCLUDE_DIR AND ALLEGRO_LIBRARY)
+if(ALLEGRO_FOUND)
+    set(ALLEGRO_LIBRARIES ${ALLEGRO_LIBRARY})
+    set(ALLEGRO_INCLUDE_DIRS ${ALLEGRO_INCLUDE_DIR})
 
-IF (ALLEGRO_FOUND)
-    IF (NOT ALLEGRO_FIND_QUIETLY)
-        MESSAGE(STATUS "Found Allegro: ${ALLEGRO_LIBRARY}")
-    ENDIF (NOT ALLEGRO_FIND_QUIETLY)
-ELSE (ALLEGRO_FOUND)
-    IF (ALLEGRO_FIND_REQUIRED)
-        MESSAGE(STATUS "Looked for Allegro libraries named ${ALLEGRO_NAMES}.")
-        MESSAGE(FATAL_ERROR "Could NOT find Allegro library")
-    ENDIF (ALLEGRO_FIND_REQUIRED)
-ENDIF (ALLEGRO_FOUND)
+    if(NOT TARGET ALLEGRO::ALLEGRO)
+        add_library(ALLEGRO::ALLEGRO UNKNOWN IMPORTED)
+        set_target_properties(ALLEGRO::ALLEGRO PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${ALLEGRO_INCLUDE_DIR}"
+            INTERFACE_LINK_LIBRARIES "${ALLEGRO_LIBRARY}"
+            )
+        set_property(TARGET ALLEGRO::ALLEGRO APPEND PROPERTY IMPORTED_LOCATION "${ALLEGRO_LIBRARY}")
+    endif()
+endif(ALLEGRO_FOUND)
 
-MARK_AS_ADVANCED(
-ALLEGRO_LIBRARY
-ALLEGRO_INCLUDE_DIR
-)
+mark_as_advanced(
+    ALLEGRO_LIBRARIES
+    ALLEGRO_INCLUDE_DIRS
+    )

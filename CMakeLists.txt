@@ -358,7 +358,7 @@ if(OPENTTD_ICU_SORT OR OPENTTD_ICU_LAYOUT)
 endif()
 
 if(OPENTTD_ALLEGRO)
-    target_link_libraries(openttd PRIVATE Allegro::Allegro)
+    target_link_libraries(openttd PRIVATE ALLEGRO::ALLEGRO)
     target_compile_definitions(openttd PRIVATE WITH_ALLEGRO)
 endif()
 
