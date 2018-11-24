@@ -24,7 +24,7 @@ set(Cocoa_VERSION ${PC_Cocoa_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Cocoa 
-    REQUIRED_VARS Cocoa_LIBRARIES Cocoa_INCLUDE_DIRS
+    REQUIRED_VARS Cocoa_LIBRARY Cocoa_INCLUDE_DIR
     VERSION_VAR Cocoa_VERSION
     )
 
