@@ -11,8 +11,14 @@ if(PKG_CONFIG_FOUND)
     pkg_check_modules(PC_Cocoa cocoa QUIET)
 endif()
 
-find_path(Cocoa_INCLUDE_DIRS NAMES Cocoa.h HINTS ${PC_Cocoa_INCLUDE_DIRS} ${Cocoa_ROOT} PATH_SUFFIXES Cocoa)
-find_library(Cocoa_LIBRARIES NAMES Cocoa HINTS ${PC_Cocoa_LIBRARY_DIRS} ${Cocoa_ROOT})
+find_path(Cocoa_INCLUDE_DIR
+    NAMES Cocoa.h
+    HINTS ${PC_Cocoa_INCLUDE_DIRS} ${Cocoa_ROOT}
+    PATH_SUFFIXES Cocoa)
+find_library(Cocoa_LIBRARY
+    NAMES Cocoa
+    HINTS ${PC_Cocoa_LIBRARY_DIRS} ${Cocoa_ROOT}
+    PATH_SUFFIXES Cocoa)
 
 set(Cocoa_VERSION ${PC_Cocoa_VERSION})
 
@@ -23,6 +29,9 @@ find_package_handle_standard_args(Cocoa
     )
 
 if(Cocoa_FOUND)
+    set(Cocoa_INCLUDE_DIRS ${Cocoa_INCLUDE_DIR})
+    set(Cocoa_LIBRARIES ${Cocoa_LIBRARY})
+
     if(NOT TARGET Cocoa::Cocoa)
         add_library(Cocoa::Cocoa UNKNOWN IMPORTED)
         set_target_properties(Cocoa::Cocoa PROPERTIES
