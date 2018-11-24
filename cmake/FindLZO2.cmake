@@ -17,10 +17,16 @@ if(PKG_CONFIG_FOUND)
   pkg_check_modules(PC_LZO2 lzo2 QUIET)
 endif()
 
-find_path(LZO2_INCLUDE_DIR NAMES lzo/lzo2a.h
-                           PATHS ${PC_LZO2_INCLUDEDIR})
-find_library(LZO2_LIBRARY NAMES lzo2
-                          PATHS ${PC_LZO2_LIBDIR})
+find_path(LZO2_INCLUDE_DIR
+    NAMES lzo2a.h
+    HINTS ${PC_LZO2_INCLUDEDIR} ${LZO2_ROOT}
+    PATH_SUFFIXES lzo
+    )
+find_library(LZO2_LIBRARY
+    NAMES lzo2
+    HINTS ${PC_LZO2_LIBDIR} ${LZO2_ROOT}
+    PATH_SUFFIXES lzo
+    )
 
 set(LZO2_VERSION ${PC_LZO2_VERSION})
 
@@ -31,6 +37,7 @@ find_package_handle_standard_args(LZO2
 
 if(LZO2_FOUND)
   set(LZO2_LIBRARIES ${LZO2_LIBRARY})
+  set(LZO2_INCLUDE_DIRS ${LZO2_INCLUDE_DIR})
 
   if(NOT TARGET LZO2::LZO2)
     add_library(LZO2::LZO2 UNKNOWN IMPORTED)
@@ -39,4 +46,4 @@ if(LZO2_FOUND)
   endif()
 endif()
 
-mark_as_advanced(LZO2_INCLUDE_DIR LZO2_LIBRARY)
+mark_as_advanced(LZO2_INCLUDE_DIRS LZO2_LIBRARIES)
