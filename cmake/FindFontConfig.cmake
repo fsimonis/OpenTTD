@@ -25,13 +25,13 @@ if(PKG_CONFIG_FOUND)
   pkg_check_modules(PC_FONTCONFIG fontconfig QUIET)
 endif()
 
-find_path(
-    FONTCONFIG_INCLUDE_DIR NAMES fontconfig/fontconfig.h
-    PATHS ${PC_FONTCONFIG_INCLUDEDIR}
+find_path(FONTCONFIG_INCLUDE_DIR
+    NAMES fontconfig/fontconfig.h
+    HINTS ${PC_FONTCONFIG_INCLUDEDIR} ${FontConfig_ROOT}
     )
-find_library(
-    FONTCONFIG_LIBRARY NAMES fontconfig
-    PATHS ${PC_FONTCONFIG_LIBDIR}
+find_library(FONTCONFIG_LIBRARY
+    NAMES fontconfig
+    HINTS ${PC_FONTCONFIG_LIBDIR} ${FontConfig_ROOT}
     )
 
 set(FONTCONFIG_VERSION ${PC_FONTCONFIG_VERSION})
@@ -43,6 +43,7 @@ find_package_handle_standard_args(FONTCONFIG
 
 if(FONTCONFIG_FOUND)
   set(FONTCONFIG_LIBRARIES ${FONTCONFIG_LIBRARY})
+  set(FONTCONFIG_INCLUDE_DIRS ${FONTCONFIG_INCLUDE_DIR})
 
   if(NOT TARGET FontConfig::FontConfig)
     add_library(FontConfig::FontConfig UNKNOWN IMPORTED)
@@ -53,7 +54,4 @@ if(FONTCONFIG_FOUND)
   endif()
 endif()
 
-mark_as_advanced(FONTCONFIG_INCLUDE_DIR FONTCONFIG_LIBRARY)
-
-
-
+mark_as_advanced(FONTCONFIG_INCLUDE_DIRS FONTCONFIG_LIBRARIES)
