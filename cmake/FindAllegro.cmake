@@ -13,17 +13,20 @@
 #
 # ALLEGRO::ALLEGRO
 
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(PC_Allegro allegro QUIET)
+endif()
 
-find_path(ALLEGRO_INCLUDE_DIR NAMES allegro.h
+find_path(ALLEGRO_INCLUDE_DIR
+    NAMES allegro.h
+    HINTS $ENV{MINGDIR}/include ${PC_Allegro_INCLUDE_DIRS} ${ALLEGRO_ROOT}
     PATH_SUFFIXES allegro4 allegro
-    HINTS $ENV{MINGDIR}/include
     )
-mark_as_advanced(ALLEGRO_INCLUDE_DIR)
-
 find_library(ALLEGRO_LIBRARY
     NAMES alleg alleglib alleg41 alleg42 allegdll allegro liballegro
-    HINTS $ENV{MINGDIR}/lib)
-mark_as_advanced(ALLEGRO_LIBRARY)
+    HINTS $ENV{MINGDIR}/lib ${PC_Allegro_LIBRARY_DIRS} ${ALLEGRO_ROOT}
+    PATH_SUFFIXES allegro4 allegro
+    )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ALLEGRO
@@ -43,7 +46,4 @@ if(ALLEGRO_FOUND)
     endif()
 endif(ALLEGRO_FOUND)
 
-mark_as_advanced(
-    ALLEGRO_LIBRARIES
-    ALLEGRO_INCLUDE_DIRS
-    )
+mark_as_advanced(ALLEGRO_LIBRARIES ALLEGRO_INCLUDE_DIRS)
