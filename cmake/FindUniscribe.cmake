@@ -13,11 +13,17 @@
 #
 # UNISCRIBE::UNISCRIBE
 #
-find_path(UNISCRIBE_INCLUDE_DIR NAMES usp10.h)
-mark_as_advanced(UNISCRIBE_INCLUDE_DIR)
 
-find_library(UNISCRIBE_LIBRARY NAMES usp10)
-mark_as_advanced(UNISCRIBE_LIBRARY)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(PC_Uniscribe uniscribe QUIET)
+endif()
+
+find_path(UNISCRIBE_INCLUDE_DIR
+    NAMES usp10.h
+    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT})
+find_library(UNISCRIBE_LIBRARY
+    NAMES usp10
+    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Uniscribe
@@ -36,3 +42,5 @@ if(Uniscribe_FOUND)
         set_property(TARGET Uniscribe::Uniscribe APPEND PROPERTY IMPORTED_LOCATION "${UNISCRIBE_LIBRARY}")
     endif()
 endif()
+
+mark_as_advanced(UNISCRIBE_INCLUDE_DIRS UNISCRIBE_LIBRARIES)
