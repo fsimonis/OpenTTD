@@ -11,8 +11,8 @@ if(PKG_CONFIG_FOUND)
     pkg_check_modules(PC_Cocoa cocoa QUIET)
 endif()
 
-find_path(Cocoa_INCLUDE_DIRS NAMES Cocoa.h HINTS ${PC_Cocoa_INCLUDE_DIRS} PATH_SUFFIXES Cocoa)
-find_library(Cocoa_LIBRARIES NAMES Cocoa HINTS ${PC_Cocoa_LIBRARY_DIRS})
+find_path(Cocoa_INCLUDE_DIRS NAMES Cocoa.h HINTS ${PC_Cocoa_INCLUDE_DIRS} ${Cocoa_ROOT} PATH_SUFFIXES Cocoa)
+find_library(Cocoa_LIBRARIES NAMES Cocoa HINTS ${PC_Cocoa_LIBRARY_DIRS} ${Cocoa_ROOT})
 
 set(Cocoa_VERSION ${PC_Cocoa_VERSION})
 
