@@ -20,10 +20,10 @@ endif()
 
 find_path(UNISCRIBE_INCLUDE_DIR
     NAMES usp10.h
-    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT})
+    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT} $ENV{Uniscribe_ROOT})
 find_library(UNISCRIBE_LIBRARY
     NAMES usp10
-    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT})
+    HINTS ${PC_Uniscribe_INCLUDE_DIRS} ${Uniscribe_ROOT} $ENV{Uniscribe_ROOT})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Uniscribe
