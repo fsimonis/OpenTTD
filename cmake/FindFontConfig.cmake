@@ -27,11 +27,11 @@ endif()
 
 find_path(FONTCONFIG_INCLUDE_DIR
     NAMES fontconfig/fontconfig.h
-    HINTS ${PC_FONTCONFIG_INCLUDEDIR} ${FontConfig_ROOT}
+    HINTS ${PC_FONTCONFIG_INCLUDEDIR} $ENV{FontConfig_ROOT} ${FontConfig_ROOT}
     )
 find_library(FONTCONFIG_LIBRARY
     NAMES fontconfig
-    HINTS ${PC_FONTCONFIG_LIBDIR} ${FontConfig_ROOT}
+    HINTS ${PC_FONTCONFIG_LIBDIR} ${FontConfig_ROOT} $ENV{FontConfig_ROOT}
     )
 
 set(FONTCONFIG_VERSION ${PC_FONTCONFIG_VERSION})
