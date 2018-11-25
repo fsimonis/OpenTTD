@@ -13,11 +13,11 @@ endif()
 
 find_path(Cocoa_INCLUDE_DIR
     NAMES Cocoa.h
-    HINTS ${PC_Cocoa_INCLUDE_DIRS} ${Cocoa_ROOT}
+    HINTS ${PC_Cocoa_INCLUDE_DIRS} ${Cocoa_ROOT} $ENV{Cocoa_ROOT}
     PATH_SUFFIXES Cocoa)
 find_library(Cocoa_LIBRARY
     NAMES Cocoa
-    HINTS ${PC_Cocoa_LIBRARY_DIRS} ${Cocoa_ROOT}
+    HINTS ${PC_Cocoa_LIBRARY_DIRS} ${Cocoa_ROOT} $ENV{Cocoa_ROOT}
     PATH_SUFFIXES Cocoa)
 
 set(Cocoa_VERSION ${PC_Cocoa_VERSION})
