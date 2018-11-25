@@ -19,12 +19,12 @@ endif()
 
 find_path(ALLEGRO_INCLUDE_DIR
     NAMES allegro.h
-    HINTS $ENV{MINGDIR}/include ${PC_Allegro_INCLUDE_DIRS} ${ALLEGRO_ROOT}
+    HINTS $ENV{MINGDIR}/include ${PC_Allegro_INCLUDE_DIRS} ${ALLEGRO_ROOT} $ENV{ALLEGRO_ROOT}
     PATH_SUFFIXES allegro4 allegro
     )
 find_library(ALLEGRO_LIBRARY
     NAMES alleg alleglib alleg41 alleg42 allegdll allegro liballegro
-    HINTS $ENV{MINGDIR}/lib ${PC_Allegro_LIBRARY_DIRS} ${ALLEGRO_ROOT}
+    HINTS $ENV{MINGDIR}/lib ${PC_Allegro_LIBRARY_DIRS} ${ALLEGRO_ROOT} $ENV{ALLEGRO_ROOT}
     PATH_SUFFIXES allegro4 allegro
     )
 
