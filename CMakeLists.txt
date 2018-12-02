@@ -215,28 +215,67 @@ target_include_directories(string_gen
     ${CMAKE_CURRENT_BINARY_DIR}/src
     )
 
+#
+## Language Generation
+#
+# Steps:
+# 1) Generate english (src/table/strings.h)
+# 2) For each discovered language (src/lang/*.txt)
+#   1. Extract the language Name
+#   2. Build the full path of the output file (.lng)
+#   3. Register a command to generate the .lng using the .txt
+#
+# Important Output:
+# 1) LANGUAGE_STRINGS_HEADER containing the full path to the generated strings.h from step 1)
+# 2) LANGUAGE_LNG_FILES a list containing full paths to the generated .lng files
+
 
 # Add the command that generates the src/table/strings.h header file.
+set(LANGUAGE_STRINGS_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/table/strings.h")
 add_custom_command(
-    OUTPUT src/table/strings.h
+    OUTPUT ${LANGUAGE_STRINGS_HEADER}
     COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/src/table
-    DEPENDS string_gen ${CMAKE_SOURCE_DIR}/src/lang/english.txt
+	MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/lang/english.txt
+    DEPENDS string_gen
     COMMENT Generating Strings
+	VERBATIM
     )
 
+# Make Language Destination Directory and Prepare Native Directory Paths
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
+file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/src/lang" NATIVE_LANG_SRC)
+file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/lang" NATIVE_LANG_DIST)
+
+# Detect all Language Files
 file(GLOB LANGUAGE_FILES src/lang/*.txt)
-set(LANGUAGE_LNG_FILES "")
+set(LANGUAGE_LNG_FILES "") # Serves as a registry for all generated language files
 foreach(LANGUAGE_FILE ${LANGUAGE_FILES})
+    # Extract Language Name from full path
     get_filename_component(LANGUAGE "${LANGUAGE_FILE}" NAME_WE)
-    list(APPEND LANGUAGE_LNG_FILES "${CMAKE_CURRENT_BINARY_DIR}/lang/${LANGUAGE}.lng")
+	# Assemble the destination file and register it
+	set(LANGUAGE_LNG_FILE "${CMAKE_CURRENT_BINARY_DIR}/lang/${LANGUAGE}.lng")
+    list(APPEND LANGUAGE_LNG_FILES "${LANGUAGE_LNG_FILE}")
+	# Generate the native path of the language file
+	file(TO_NATIVE_PATH "${LANGUAGE_FILE}" NATIVE_LANG_FILE)
+	# Register command to generate a language .lng file using the .txt
     add_custom_command(
-        OUTPUT lang/${LANGUAGE}.lng
-        COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/lang ${LANGUAGE_FILE}
-        DEPENDS string_gen ${LANGUAGE_FILE}
+        OUTPUT ${LANGUAGE_LNG_FILE}
+        COMMAND $<TARGET_FILE:string_gen> -s "${NATIVE_LANG_SRC}" -d "${NATIVE_LANG_DIST}" "${NATIVE_LANG_FILE}"
+		MAIN_DEPENDENCY ${LANGUAGE_FILE}
+        DEPENDS string_gen ${LANGUAGE_STRINGS_HEADER}
         COMMENT Generating Language: ${LANGUAGE}
+		VERBATIM
         )
 endforeach()
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
+
+add_custom_target(Languages
+    DEPENDS ${LANGUAGE_STRINGS_HEADER} ${LANGUAGE_LNG_FILES}
+    )
+
+# Cleanup
+unset(LANGUAGE_FILES)
+unset(NATIVE_LANG_SRC)
+unset(NATIVE_LANG_DIST)
 
 #
 # Settings generator
@@ -290,6 +329,7 @@ add_custom_command(
     COMMAND $<TARGET_FILE:settings_gen> -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${CMAKE_SOURCE_DIR}/src/table/settings.h.preamble -a ${CMAKE_SOURCE_DIR}/src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     DEPENDS settings_gen src/table/settings.h.preamble src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
     COMMENT Generating Settings
+	VERBATIM
     )
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/table)
 
@@ -300,6 +340,17 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/table)
 # Add openttd as en empty target.
 # See src/CMakeLists.txt for the sources.
 add_executable(openttd)
+
+if(WIN32)
+	set_target_properties(openttd PROPERTIES WIN32_EXECUTABLE true)
+endif()
+
+if(APPLE)
+	set_target_properties(openttd PROPERTIES MACOSX_BUNDLE true)
+endif()
+
+# Add Languages to dependencies
+add_dependencies(openttd Languages) 
 
 # Add the sources subtree
 add_subdirectory(src)
@@ -433,10 +484,9 @@ target_link_libraries(openttd
 #
 target_sources(openttd
     PRIVATE
-    ${LANGUAGE_LNG_FILES}
     ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h
-    ${CMAKE_CURRENT_BINARY_DIR}/src/table/strings.h
+    ${LANGUAGE_STRINGS_HEADER}
     )
 target_sources(openttd PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/rev.cpp)
 
