@@ -465,9 +465,11 @@ if(OPENTTD_XAUDIO2)
     target_compile_definitions(openttd PRIVATE WITH_XAUDIO2)
 endif()
 
-# Add compiler definitions for OS support
-if(UNIX)
-    target_compile_definitions(openttd PRIVATE UNIX)
+if(WIN32)
+	target_link_libraries(openttd PRIVATE
+		Imm32 # Internationalization
+		Winmm # Music Driver
+		)
 endif()
 
 # Add third party libraries to link to.
