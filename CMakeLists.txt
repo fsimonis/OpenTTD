@@ -13,14 +13,24 @@ if (CMAKE_SYSTEM_NAME EQUAL "OS2")
     set(OS2 YES)
 endif()
 
-# Option for PSP
+# Detect PSP
 if(CMAKE_SYSTEM_NAME EQUAL "PSP")
     set(PSP YES)
 endif()
 
-# Option for BeOS
+# Detect BEOS
 if(CMAKE_SYSTEM_NAME EQUAL "BEOS")
     set(BEOS YES)
+endif()
+
+# Detect HAIKU
+if(CMAKE_SYSTEM_NAME EQUAL "HAIKU")
+    set(HAIKU YES)
+endif()
+
+# Detect SUNOS
+if(CMAKE_SYSTEM_NAME EQUAL "SUNOS")
+    set(SUNOS YES)
 endif()
 
 #
@@ -59,8 +69,7 @@ option(OPENTTD_COCOA_QUARTZ       "Enable cocoa_quartz"             ON) #TODO
 option(OPENTTD_COCOA_QUICKDRAW    "Enable cocoa_quickdraw"          ON) #TODO
 option(OPENTTD_CONSOLE            "Enable console"                  ON ) #TODO
 option(OPENTTD_DEBUG              "Enable debug"                    OFF) # DEP
-option(OPENTTD_DEDICATED          "Enable dedicated"                OFF) #TODO
-option(OPENTTD_DEDICATED "build dedicated server" OFF)
+option(OPENTTD_DEDICATED          "Build a dedicated server"        OFF)
 option(OPENTTD_DESYNC_DEBUG       "Enable desync_debug"             OFF)
 option(OPENTTD_DIRECT_MUSIC       "Compile with direct_music"       ON) #TODO check
 option(OPENTTD_DISTCC             "Compile with distcc"             OFF)
@@ -96,6 +105,14 @@ option(OPENTTD_UNIVERSAL          "Enable universal"                OFF) #TODO
 option(OPENTTD_XAUDIO2            "Compile with xaudio2"            ON) #TODO
 option(OPENTTD_XDG_BASEDIR        "Compile with xdg_basedir"        ON) #TODO
 option(OPENTTD_ZLIB               "Compile with zlib"               ON)
+
+# Sanity checks
+
+if(OPENTTD_DEDICATED AND NOT OPENTTD_NETWORK)
+    message(ERROR_FATAL "Building a server without networking is pointless!")
+endif()
+
+# Depedency discovery
 
 if(OPENTTD_DIRECT_MUSIC)
     find_package(DirectMusic REQUIRED)
@@ -530,12 +547,31 @@ if(WIN32)
 		)
 endif()
 
+if(OPENTTD_NETWORK)
+    message(STATUS "Networking is enabled")
+    target_compile_definitions(openttd PRIVATE ENABLE_NETWORK)
+    if(BEOS)
+        target_link_libraries(openttd PRIVATE -lbind -lsocket)
+    endif()
+    if(HAIKU)
+        target_link_libraries(openttd PRIVATE -lnetwork)
+    endif()
+    if(SUNOS)
+        target_link_libraries(openttd PRIVATE -lnsl -lsocket)
+    endif()
+endif()
+
 #
 # Treet Non-Library Options
 #
 
 if(OPENTTD_DESYNC_DEBUG)
     target_compile_definitions(openttd PRIVATE RANDOM_DEBUG)
+endif()
+
+
+if(OPENTTD_DEDICATED)
+    target_compile_definitions(openttd PRIVATE DEDICATED)
 endif()
 
 
