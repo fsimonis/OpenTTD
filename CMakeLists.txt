@@ -82,9 +82,9 @@ option(OPENTTD_CCACHE             "Compile with ccache"             ON) #DEP
 option(OPENTTD_NFORENUM           "Compile with nforenum"           ON) #TODO
 option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON) #TODO
 option(OPENTTD_SSE                "Compile with sse"                ON)
-
-option(OPENTTD_DEBUG              "Enable debug"                    OFF) # DEP
 option(OPENTTD_DESYNC_DEBUG       "Enable desync_debug"             OFF)
+option(OPENTTD_DEBUG              "Enable debug"                    OFF) # DEP
+
 option(OPENTTD_PROFILING          "Enable profiling"                OFF)
 option(OPENTTD_LTO                "Enable lto"                      OFF) # DEP
 option(OPENTTD_DEDICATED          "Enable dedicated"                OFF)
@@ -185,6 +185,18 @@ if(NOT OPENTTD_ASSERT)
         message(WARNING "CMAKE_BUILD_TYPE and OPENTTD_ASSERT are conflicting!")
     endif()
     add_compile_options(NDEBUG)
+endif()
+
+if(OPENTTD_DEBUG)
+    if(DEFINED CMAKE_BUILD_TYPE)
+        if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+            message(WARNING "CMAKE_BUILD_TYPE and OPENTTD_DEBUG are redundant!")
+        else()
+            message(ERROR_FATAL "CMAKE_BUILD_TYPE and OPENTTD_DEBUG are conflicting!")
+        endif()
+    else()
+        set(CMAKE_BUILD_TYPE "Debug")
+    endif()
 endif()
 
 # Detect Version, Modified and Date
