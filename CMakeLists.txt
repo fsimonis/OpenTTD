@@ -340,6 +340,7 @@ target_include_directories(settings_gen
 file(GLOB SETTINGS_TABLE_INI src/table/*.ini)
 
 # Add the command that generates the settings.h header file.
+# TODO Verify that the paths are fine on Windows
 add_custom_command(
     OUTPUT src/table/settings.h
     COMMAND $<TARGET_FILE:settings_gen> -o ${CMAKE_CURRENT_BINARY_DIR}/src/table/settings.h -b ${CMAKE_SOURCE_DIR}/src/table/settings.h.preamble -a ${CMAKE_SOURCE_DIR}/src/table/settings.h.postamble ${SETTINGS_TABLE_INI}
