@@ -34,6 +34,9 @@ if(NOT CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 
+# Add _Debug for debug targets
+add_compile_options("$<$<CONFIG:DEBUG>:-D_DEBUG>")
+
 # Path specific options
 
 set(OPENTTD_REL_BINARY_DIR "games" CACHE STRING "relative to prefix")
