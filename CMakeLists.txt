@@ -241,6 +241,7 @@ target_include_directories(string_gen
 # Important Output:
 # 1) LANGUAGE_STRINGS_HEADER containing the full path to the generated strings.h from step 1)
 # 2) LANGUAGE_LNG_FILES a list containing full paths to the generated .lng files
+# 3) The target Languages which depends on the generation of the LANGUAGE_STRINGS_HEADER and all LANGUAGE_LNG_FILES
 
 
 # Add the command that generates the src/table/strings.h header file.
