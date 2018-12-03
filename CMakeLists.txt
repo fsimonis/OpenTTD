@@ -77,7 +77,7 @@ option(OPENTTD_ICU_LAYOUT         "Compile with icu_layout"         ON)
 option(OPENTTD_ICU_SORT           "Compile with icu_sort"           ON)
 option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON) #TODO check
 option(OPENTTD_THREADS            "Compile with threads"            ON) #DEP?
-option(OPENTTD_DISTCC             "Compile with distcc"             ON) #DEP
+option(OPENTTD_DISTCC             "Compile with distcc"             OFF)
 option(OPENTTD_CCACHE             "Compile with ccache"             ON)
 option(OPENTTD_NFORENUM           "Compile with nforenum"           ON) #TODO
 option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON) #TODO
@@ -203,6 +203,13 @@ if(OPENTTD_CCACHE)
     find_package(CCACHE REQUIRED)
     list(APPEND CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_BIN}")
     list(APPEND CMAKE_C_COMPILER_LAUNCHER "${CCACHE_BIN}")
+endif()
+
+if(OPENTTD_DISTCC)
+    find_package(DistCC REQUIRED)
+    # The distcc launcher is appended on purpose as ccache should run first
+    list(APPEND CMAKE_CXX_COMPILER_LAUNCHER "${DistCC_BIN}")
+    list(APPEND CMAKE_C_COMPILER_LAUNCHER "${DistCC_BIN}")
 endif()
 
 # Detect Version, Modified and Date
