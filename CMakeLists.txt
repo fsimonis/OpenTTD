@@ -99,7 +99,7 @@ option(OPENTTD_STATIC             "Enable static"                   ON )
 option(OPENTTD_STRIP              "Enable strip"                    OFF) #TODO
 option(OPENTTD_THREADS            "Compile with threads"            ON) #DEP?
 option(OPENTTD_TRANSLATOR         "Enable translator"               OFF) #TODO
-option(OPENTTD_UNICODE            "Enable unicode"                  ON ) #TODO
+option(OPENTTD_UNICODE            "Enable unicode"                  ON)
 option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON) #TODO check
 option(OPENTTD_UNIVERSAL          "Enable universal"                OFF) #TODO
 option(OPENTTD_XAUDIO2            "Compile with xaudio2"            ON) #TODO
@@ -175,6 +175,10 @@ endif(OPENTTD_FONTCONFIG)
 if(OPENTTD_UNISCRIBE)
     find_package(Uniscribe REQUIRED)
 endif(OPENTTD_UNISCRIBE)
+
+if(OPENTTD_UNICODE)
+    add_compile_options(UNICODE _UNICODE)
+endif(OPENTTD_UNICODE)
 
 if(OPENTTD_THREADS)
     find_package(Threads REQUIRED)
