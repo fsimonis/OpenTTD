@@ -93,7 +93,7 @@ option(OPENTTD_STATIC             "Enable static"                   ON )
 option(OPENTTD_TRANSLATOR         "Enable translator"               OFF)
 option(OPENTTD_UNICODE            "Enable unicode"                  ON )
 option(OPENTTD_CONSOLE            "Enable console"                  ON )
-option(OPENTTD_ASSERT             "Enable asserts"                  ON )
+option(OPENTTD_ASSERT             "Enable asserts"                  ON ) # DEP
 option(OPENTTD_STRIP              "Enable strip"                    OFF)
 option(OPENTTD_UNIVERSAL          "Enable universal"                OFF)
 option(OPENTTD_OSX_G5             "Enable osx_g5"                   OFF)
@@ -178,6 +178,13 @@ if(OPENTTD_STATIC)
     else()
         set(BUILD_SHARED_LIBS ON)
     endif()
+endif()
+
+if(NOT OPENTTD_ASSERT)
+    if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+        message(WARNING "CMAKE_BUILD_TYPE and OPENTTD_ASSERT are conflicting!")
+    endif()
+    add_compile_options(NDEBUG)
 endif()
 
 # Detect Version, Modified and Date
