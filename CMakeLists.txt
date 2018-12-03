@@ -14,18 +14,28 @@ if (CMAKE_SYSTEM_NAME EQUAL "OS2")
 endif()
 
 # Option for PSP
-option(PSP "Target PSP?" OFF)
+if(CMAKE_SYSTEM_NAME EQUAL "PSP")
+    set(PSP YES)
+endif()
 
 # Option for BeOS
-option(BEOS "Target BeOS?" OFF)
+if(CMAKE_SYSTEM_NAME EQUAL "BEOS")
+    set(BEOS YES)
+endif()
 
 #
 # Options and Cached Variables
 #
 
+# Generic CMake Options
+
 if(NOT CMAKE_INSTALL_PREFIX)
+    message(WARNING "No install prefix set! Assuming /usr/local")
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
+
+# Path specific options
+
 set(OPENTTD_REL_BINARY_DIR "games" CACHE STRING "relative to prefix")
 set(OPENTTD_REL_DATA_DIR "share/games/openttd" CACHE STRING "relative to prefix")
 set(OPENTTD_REL_ICON_DIR "share/pixmaps" CACHE STRING "relative to prefix")
