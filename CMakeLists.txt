@@ -244,20 +244,22 @@ target_include_directories(string_gen
 # 3) The target Languages which depends on the generation of the LANGUAGE_STRINGS_HEADER and all LANGUAGE_LNG_FILES
 
 
-# Add the command that generates the src/table/strings.h header file.
+# Make Language Destination Directory and Prepare Native Directory Paths
 set(LANGUAGE_STRINGS_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/table/strings.h")
+file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/src/lang" NATIVE_LANG_SRC)
+file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/src/table" NATIVE_LANG_TABLE_DIR)
+
+# Add the command that generates the src/table/strings.h header file.
 add_custom_command(
     OUTPUT ${LANGUAGE_STRINGS_HEADER}
-    COMMAND $<TARGET_FILE:string_gen> -s ${CMAKE_SOURCE_DIR}/src/lang -d ${CMAKE_CURRENT_BINARY_DIR}/src/table
+    COMMAND $<TARGET_FILE:string_gen> -s ${NATIVE_LANG_SRC} -d ${NATIVE_LANG_TABLE_DIR}
 	MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/lang/english.txt
     DEPENDS string_gen
     COMMENT Generating Strings
 	VERBATIM
     )
 
-# Make Language Destination Directory and Prepare Native Directory Paths
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
-file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/src/lang" NATIVE_LANG_SRC)
 file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/lang" NATIVE_LANG_DIST)
 
 # Detect all Language Files
