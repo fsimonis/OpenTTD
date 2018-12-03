@@ -50,53 +50,52 @@ set(OPENTTD_ICON_DIR   "${CMAKE_INSTALL_PREFIX}/${OPENTTD_REL_ICON_DIR}")
 
 # Migrated options from config.lib
 
-option(OPENTTD_DEDICATED "build dedicated server" OFF)
-option(OPENTTD_OSX_SYSROOT        "Compile with osx_sysroot"        ON)
-option(OPENTTD_APPLICATION_BUNDLE "Compile with application_bundle" ON)
-option(OPENTTD_MENU_ENTRY         "Compile with menu_entry"         ON)
 option(OPENTTD_ALLEGRO            "Compile with allegro"            ON)
-option(OPENTTD_SDL                "Compile with sdl"                ON)
+option(OPENTTD_APPLICATION_BUNDLE "Compile with application_bundle" ON)
+option(OPENTTD_ASSERT             "Enable asserts"                  ON ) # DEP
+option(OPENTTD_CCACHE             "Compile with ccache"             ON)
 option(OPENTTD_COCOA              "Compile with cocoa"              ON) #TODO check
 option(OPENTTD_COCOA_QUARTZ       "Enable cocoa_quartz"             ON) #TODO
 option(OPENTTD_COCOA_QUICKDRAW    "Enable cocoa_quickdraw"          ON) #TODO
-option(OPENTTD_ZLIB               "Compile with zlib"               ON)
-option(OPENTTD_LZMA               "Compile with lzma"               ON)
-option(OPENTTD_LZO2               "Compile with lzo2"               ON)
-option(OPENTTD_XDG_BASEDIR        "Compile with xdg_basedir"        ON) #TODO
-option(OPENTTD_PNG                "Compile with png"                ON)
-option(OPENTTD_MAKEDEPEND         "Compile with makedepend"         OFF) #TODO
+option(OPENTTD_CONSOLE            "Enable console"                  ON ) #TODO
+option(OPENTTD_DEBUG              "Enable debug"                    OFF) # DEP
+option(OPENTTD_DEDICATED          "Enable dedicated"                OFF) #TODO
+option(OPENTTD_DEDICATED "build dedicated server" OFF)
+option(OPENTTD_DESYNC_DEBUG       "Enable desync_debug"             OFF)
 option(OPENTTD_DIRECT_MUSIC       "Compile with direct_music"       ON) #TODO check
-option(OPENTTD_XAUDIO2            "Compile with xaudio2"            ON) #TODO
-option(OPENTTD_SORT               "Compile with sort"               ON) #TODO
+option(OPENTTD_DISTCC             "Compile with distcc"             OFF)
+option(OPENTTD_FONTCONFIG         "Compile with fontconfig"         ON)
+option(OPENTTD_FREETYPE           "Compile with freetype"           ON)
+option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON) #TODO
 option(OPENTTD_ICONV              "Compile with iconv"              ON)
 option(OPENTTD_ICONV_NON_CONST    "Is the iconv implementation non-const?" ON) # TODO treat in code
-option(OPENTTD_LIBTIMIDITY        "Compile with libtimidity"        ON) #TODO check
-option(OPENTTD_FREETYPE           "Compile with freetype"           ON)
-option(OPENTTD_FONTCONFIG         "Compile with fontconfig"         ON)
 option(OPENTTD_ICU_LAYOUT         "Compile with icu_layout"         ON)
 option(OPENTTD_ICU_SORT           "Compile with icu_sort"           ON)
-option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON) #TODO check
-option(OPENTTD_THREADS            "Compile with threads"            ON) #DEP?
-option(OPENTTD_DISTCC             "Compile with distcc"             OFF)
-option(OPENTTD_CCACHE             "Compile with ccache"             ON)
+option(OPENTTD_LIBTIMIDITY        "Compile with libtimidity"        ON) #TODO check
+option(OPENTTD_LTO                "Enable lto"                      OFF) #TODO # DEP
+option(OPENTTD_LZMA               "Compile with lzma"               ON)
+option(OPENTTD_LZO2               "Compile with lzo2"               ON)
+option(OPENTTD_MAKEDEPEND         "Compile with makedepend"         OFF) #TODO
+option(OPENTTD_MENU_ENTRY         "Compile with menu_entry"         ON)
+option(OPENTTD_NETWORK            "Enable network"                  ON ) #TODO
 option(OPENTTD_NFORENUM           "Compile with nforenum"           ON) #TODO
-option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON) #TODO
+option(OPENTTD_OSX_G5             "Enable osx_g5"                   OFF) #TODO
+option(OPENTTD_OSX_SYSROOT        "Compile with osx_sysroot"        ON)
+option(OPENTTD_PNG                "Compile with png"                ON)
+option(OPENTTD_PROFILING          "Enable profiling"                OFF) #TODO
+option(OPENTTD_SDL                "Compile with sdl"                ON)
+option(OPENTTD_SORT               "Compile with sort"               ON) #TODO
 option(OPENTTD_SSE                "Compile with sse"                ON)
-option(OPENTTD_DESYNC_DEBUG       "Enable desync_debug"             OFF)
-option(OPENTTD_DEBUG              "Enable debug"                    OFF) # DEP
-
-option(OPENTTD_PROFILING          "Enable profiling"                OFF)
-option(OPENTTD_LTO                "Enable lto"                      OFF) # DEP
-option(OPENTTD_DEDICATED          "Enable dedicated"                OFF)
-option(OPENTTD_NETWORK            "Enable network"                  ON )
 option(OPENTTD_STATIC             "Enable static"                   ON )
-option(OPENTTD_TRANSLATOR         "Enable translator"               OFF)
-option(OPENTTD_UNICODE            "Enable unicode"                  ON )
-option(OPENTTD_CONSOLE            "Enable console"                  ON )
-option(OPENTTD_ASSERT             "Enable asserts"                  ON ) # DEP
-option(OPENTTD_STRIP              "Enable strip"                    OFF)
-option(OPENTTD_UNIVERSAL          "Enable universal"                OFF)
-option(OPENTTD_OSX_G5             "Enable osx_g5"                   OFF)
+option(OPENTTD_STRIP              "Enable strip"                    OFF) #TODO
+option(OPENTTD_THREADS            "Compile with threads"            ON) #DEP?
+option(OPENTTD_TRANSLATOR         "Enable translator"               OFF) #TODO
+option(OPENTTD_UNICODE            "Enable unicode"                  ON ) #TODO
+option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON) #TODO check
+option(OPENTTD_UNIVERSAL          "Enable universal"                OFF) #TODO
+option(OPENTTD_XAUDIO2            "Compile with xaudio2"            ON) #TODO
+option(OPENTTD_XDG_BASEDIR        "Compile with xdg_basedir"        ON) #TODO
+option(OPENTTD_ZLIB               "Compile with zlib"               ON)
 
 if(OPENTTD_DIRECT_MUSIC)
     find_package(DirectMusic REQUIRED)
