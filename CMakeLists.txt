@@ -170,6 +170,16 @@ if(OPENTTD_SSE)
     check_sse()
 endif(OPENTTD_SSE)
 
+if(OPENTTD_STATIC)
+    if(DEFINED BUILD_SHARED_LIBS)
+        if(BUILD_SHARED_LIBS)
+            message(ERROR "CMake BUILD_SHARED_LIBS and OPENTTD_STATIC are conflicting!")
+        endif() 
+    else()
+        set(BUILD_SHARED_LIBS ON)
+    endif()
+endif()
+
 # Detect Version, Modified and Date
 include(cmake/DetectVersion.cmake)
 
@@ -488,6 +498,15 @@ if(WIN32)
 		Winmm # Music Driver
 		)
 endif()
+
+#
+# Treet Non-Library Options
+#
+
+if(OPENTTD_DESYNC_DEBUG)
+    target_compile_definitions(openttd PRIVATE RANDOM_DEBUG)
+endif()
+
 
 # Add third party libraries to link to.
 target_link_libraries(openttd
