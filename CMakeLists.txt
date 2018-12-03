@@ -78,7 +78,7 @@ option(OPENTTD_ICU_SORT           "Compile with icu_sort"           ON)
 option(OPENTTD_UNISCRIBE          "Compile with uniscribe"          ON) #TODO check
 option(OPENTTD_THREADS            "Compile with threads"            ON) #DEP?
 option(OPENTTD_DISTCC             "Compile with distcc"             ON) #DEP
-option(OPENTTD_CCACHE             "Compile with ccache"             ON) #DEP
+option(OPENTTD_CCACHE             "Compile with ccache"             ON)
 option(OPENTTD_NFORENUM           "Compile with nforenum"           ON) #TODO
 option(OPENTTD_GRFCODEC           "Compile with grfcodec"           ON) #TODO
 option(OPENTTD_SSE                "Compile with sse"                ON)
@@ -197,6 +197,12 @@ if(OPENTTD_DEBUG)
     else()
         set(CMAKE_BUILD_TYPE "Debug")
     endif()
+endif()
+
+if(OPENTTD_CCACHE)
+    find_package(CCACHE REQUIRED)
+    list(APPEND CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_BIN}")
+    list(APPEND CMAKE_C_COMPILER_LAUNCHER "${CCACHE_BIN}")
 endif()
 
 # Detect Version, Modified and Date
