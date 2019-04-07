@@ -4,7 +4,7 @@
 # so it is cheaper to cache them in git, and only regenerate when you are
 # working on it / have the tools installed.
 if (NFORENUM_FOUND AND GRFCODEC_FOUND)
-    include(CreateGrfCommand REQUIRED)
+    include(CreateGrfCommand)
     create_grf_command(
         # We share some files with 'openttd' grf
         ${CMAKE_CURRENT_SOURCE_DIR}/../openttd/airports.png
