@@ -12,6 +12,9 @@ include(Options)
 set_options()
 set_directory_options()
 
+include(Static)
+set_static()
+
 # Prefer -pthread over -lpthread, which is often the better option of the two.
 set(CMAKE_THREAD_PREFER_PTHREAD YES)
 # Make sure we have Threads available. We don't use autodetect_library here,
