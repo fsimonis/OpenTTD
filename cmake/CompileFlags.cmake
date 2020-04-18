@@ -78,8 +78,8 @@ macro(compile_flags)
         )
 
         if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-            include(AutodetectGCCCompileFlag)
-            autodetect_gcc_compile_flag("-flifetime-dse=1" LIFETIME_DSE_FOUND)
+            include(CheckCXXCompilerFlag)
+            check_cxx_compiler_flag("-flifetime-dse=1" LIFETIME_DSE_FOUND)
 
             add_compile_options(
                 # GCC 4.2+ automatically assumes that signed overflows do
