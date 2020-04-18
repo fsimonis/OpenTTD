@@ -87,6 +87,7 @@ macro(_patch_vcpkg_debug_optimized NAME)
         unset(PATCH_LIBRARIES)
 
         if (HAS_OPTIMIZED LESS 0)
+            message(STATUS "Fixing ${NAME}_LIBRARIES")
             foreach(PATCH_LIBRARY ${${NAME}_LIBRARIES})
                 # Check if we have a 'debug' entry or an 'optimized' entry, and
                 # create the complementary entry.
@@ -116,12 +117,15 @@ function(autodetect_library FRIENDLY NAME PACKAGE PKGCONFIG HEADER_PATH HEADER L
 
     message(STATUS "Detecting ${FRIENDLY}")
 
+    message(STATUS "Trying find_package")
     find_package("${PACKAGE}" QUIET)
 
     if (NOT ${NAME}_FOUND)
+        message(STATUS "Trying pkgconfig")
         _autodetect_library_via_pkgconfig("${NAME}" "${PKGCONFIG}")
     endif (NOT ${NAME}_FOUND)
     if (NOT ${NAME}_FOUND)
+        message(STATUS "Trying find")
         _autodetect_library_via_find("${NAME}" "${HEADER_PATH}" "${HEADER}" "${LIBRARY}")
     endif (NOT ${NAME}_FOUND)
 
@@ -155,6 +159,7 @@ function(link_library NAME)
         add_definitions(-DWITH_${UCNAME})
         include_directories(${${NAME}_INCLUDE_DIRS})
         target_link_libraries(openttd ${${NAME}_LIBRARIES})
+        message(STATUS "${NAME} found -- -DWITH_${UCNAME} -- ${${NAME}_INCLUDE_DIRS} -- ${${NAME}_LIBRARIES}")
     else (${NAME}_FOUND)
         if (ENCOURAGED)
             message(WARNING "${NAME} not found; compiling OpenTTD without ${NAME} is strongly disencouraged")

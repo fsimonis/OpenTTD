@@ -8,6 +8,14 @@ endif (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+execute_process(COMMAND ${CMAKE_COMMAND} --version)
+execute_process(COMMAND ${CMAKE_COMMAND} --help-module-list OUTPUT_VARIABLE MODLIST)
+string(REGEX MATCHALL "\n?Find[^\n]+" MODLIST ${MODLIST})
+foreach(MOD ${MODLIST})
+    string(REGEX MATCH "Find[^\n]+" MOD ${MOD})
+    message(STATUS "${MOD}")
+endforeach()
+
 include(Options)
 set_options()
 set_directory_options()
