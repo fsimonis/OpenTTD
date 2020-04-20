@@ -56,8 +56,7 @@ if (APPLE)
 endif (APPLE)
 
 if (MSVC)
-    include(AutodetectEditbin)
-    autodetect_editbin()
+    find_package(Editbin REQUIRED)
 endif (MSVC)
 
 include(AutodetectSSE)
