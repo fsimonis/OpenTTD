@@ -59,9 +59,7 @@ if (MSVC)
     find_package(Editbin REQUIRED)
 endif (MSVC)
 
-include(AutodetectSSE)
-autodetect_sse()
-
+find_package(SSE)
 find_package(Xaudio2)
 
 find_package(Grfcodec)
@@ -212,9 +210,7 @@ if (NOT GLOBAL_DIR STREQUAL "(not set)")
     )
 endif (NOT GLOBAL_DIR STREQUAL "(not set)")
 
-if (SSE_FOUND)
-    add_definitions(-DWITH_SSE)
-endif (SSE_FOUND)
+link_library(SSE)
 
 add_definitions_based_on_options()
 
