@@ -44,8 +44,7 @@ if (NOT WIN32)
     autodetect_library("fluidsynth" FLUIDSYNTH FLUIDSYNTH fluidsynth "" fluidsynth.h fluidsynth)
     find_package(Freetype)
     autodetect_library("FontConfig" FONTCONFIG FONTCONFIG fontconfig fontconfig fontconfig.h fontconfig)
-    autodetect_library("icu-lx" ICU_lx ICU icu-lx "" NOTFOUND NOTFOUND) # Manual lookup is not supported
-    autodetect_library("icu-i18n" ICU_i18n ICU icu-i18n "" NOTFOUND NOTFOUND) # Manual lookup is not supported
+    find_package(ICU OPTIONAL_COMPONENTS i18n lx)
     autodetect_library("xdg-basedir" XDG_BASEDIR XDG_BASEDIR libxdg-basedir "" basedir.h xdg-basedir)
 endif (NOT WIN32)
 if (APPLE)
