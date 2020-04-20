@@ -62,8 +62,7 @@ endif (MSVC)
 include(AutodetectSSE)
 autodetect_sse()
 
-include(AutodetectXaudio2)
-autodetect_xaudio2()
+find_package(Xaudio2)
 
 include(AutodetectGrfcodec)
 autodetect_grfcodec()
