@@ -64,8 +64,7 @@ autodetect_sse()
 
 find_package(Xaudio2)
 
-include(AutodetectGrfcodec)
-autodetect_grfcodec()
+find_package(Grfcodec)
 
 # IPO is only properly supported from CMake 3.9. Despite the fact we are
 # CMake 3.5, still enable IPO if we detect we are 3.9+.
