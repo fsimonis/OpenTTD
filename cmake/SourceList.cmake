@@ -4,7 +4,7 @@
 #
 # CONDITION is a complete statement that can be evaluated with if().
 # If it evaluates true, the source files will be added; otherwise not.
-# For example: ADD_IF SDL_FOUND AND ALLEGRO_FOUND
+# For example: ADD_IF SDL_FOUND AND Allegro_FOUND
 #
 function(add_files)
     cmake_parse_arguments(PARAM "" "" "CONDITION" ${ARGN})

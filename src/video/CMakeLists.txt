@@ -4,7 +4,7 @@ if (NOT OPTION_DEDICATED)
     add_files(
         allegro_v.cpp
         allegro_v.h
-        CONDITION ALLEGRO_FOUND
+        CONDITION Allegro_FOUND
     )
 
     add_files(
