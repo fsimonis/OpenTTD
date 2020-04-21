@@ -8,7 +8,7 @@ if (NOT OPTION_DEDICATED)
     add_files(
         fluidsynth.cpp
         fluidsynth.h
-        CONDITION FLUIDSYNTH_FOUND
+        CONDITION Fluidsynth_FOUND
     )
 
     add_files(
