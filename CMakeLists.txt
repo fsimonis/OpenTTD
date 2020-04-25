@@ -48,7 +48,7 @@ if (NOT WIN32)
     find_package(XDG_basedir)
 endif (NOT WIN32)
 if (APPLE)
-    autodetect_library("iconv" Iconv Iconv iconv "" iconv.h iconv)
+    find_package(Iconv)
 
     find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox)
     find_library(AUDIOUNIT_LIBRARY AudioUnit)
