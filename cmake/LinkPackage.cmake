@@ -1,4 +1,4 @@
-function(link_library NAME)
+function(link_package NAME)
     set(args ${ARGN})
 
     # Check if any of the argument is ENCOURAGED
