@@ -25,12 +25,9 @@ set_static()
 
 # Prefer -pthread over -lpthread, which is often the better option of the two.
 set(CMAKE_THREAD_PREFER_PTHREAD YES)
-# Make sure we have Threads available. We don't use autodetect_library here,
-# as the CMake 'FindThreads' is a lot more clever, always available, and
-# gives us a Threads::Threads dependency to link to our application.
+# Make sure we have Threads available.
 find_package(Threads REQUIRED)
 
-include(AutodetectLibrary)
 find_package(ZLIB)
 find_package(LibLZMA)
 find_package(LZO)
@@ -158,6 +155,7 @@ if (APPLE OR UNIX)
     add_definitions(-DUNIX)
 endif (APPLE OR UNIX)
 
+include(LinkLibrary)
 link_library(PNG ENCOURAGED)
 link_library(ZLIB ENCOURAGED)
 link_library(LIBLZMA ENCOURAGED)

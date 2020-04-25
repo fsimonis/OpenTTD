@@ -1,0 +1,22 @@
+function(link_library NAME)
+    set(args ${ARGN})
+
+    # Check if any of the argument is ENCOURAGED
+    if ("ENCOURAGED" IN_LIST args)
+        set(ENCOURAGED YES)
+    else ("ENCOURAGED" IN_LIST args)
+        set(ENCOURAGED NO)
+    endif ("ENCOURAGED" IN_LIST args)
+
+    if (${NAME}_FOUND)
+        string(TOUPPER "${NAME}" UCNAME)
+        add_definitions(-DWITH_${UCNAME})
+        include_directories(${${NAME}_INCLUDE_DIRS})
+        target_link_libraries(openttd ${${NAME}_LIBRARIES})
+        message(STATUS "${NAME} found -- -DWITH_${UCNAME} -- ${${NAME}_INCLUDE_DIRS} -- ${${NAME}_LIBRARIES}")
+    else (${NAME}_FOUND)
+        if (ENCOURAGED)
+            message(WARNING "${NAME} not found; compiling OpenTTD without ${NAME} is strongly disencouraged")
+        endif (ENCOURAGED)
+    endif (${NAME}_FOUND)
+endfunction()
