@@ -61,6 +61,9 @@ find_package(Xaudio2)
 
 find_package(Grfcodec)
 
+# Always generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # IPO is only properly supported from CMake 3.9. Despite the fact we are
 # CMake 3.5, still enable IPO if we detect we are 3.9+.
 if (POLICY CMP0069)
