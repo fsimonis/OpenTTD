@@ -52,6 +52,26 @@ function(set_options)
     option(OPTION_USE_THREADS "Use threads" YES)
 endfunction()
 
+# Set option to enable the use of ccache.
+#
+# set_ccache_option()
+#
+function(set_ccache_option)
+  option(OPTION_USE_CCACHE "Use ccache" OFF)
+  if(OPTION_USE_CCACHE)
+    find_program(CCACHE_COMMAND ccache)
+    if(CCACHE_COMMAND)
+      message(STATUS "ccache enabled - ${CCACHE_COMMAND}")
+      set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_COMMAND}" CACHE FILEPATH "The compiler launcher for CXX.")
+      set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_COMMAND}" CACHE FILEPATH "The compiler launcher for C.")
+    else()
+      message(FATAL_ERROR "ccache was not found.")
+    endif()
+  else()
+    message(STATUS "ccache disabled")
+  endif()
+endfunction()
+
 # Show the values of the generic options.
 #
 # show_options()

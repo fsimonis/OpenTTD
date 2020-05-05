@@ -18,6 +18,7 @@ endforeach()
 
 include(Options)
 set_options()
+set_ccache_option()
 set_directory_options()
 
 include(Static)
