@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.7.2)
 
 project(OpenTTD)
 
@@ -156,25 +156,25 @@ if (APPLE OR UNIX)
 endif (APPLE OR UNIX)
 
 include(LinkPackage)
-link_package(PNG ENCOURAGED)
-link_package(ZLIB ENCOURAGED)
-link_package(LIBLZMA ENCOURAGED)
+link_package(PNG TARGET PNG::PNG ENCOURAGED)
+link_package(ZLIB TARGET ZLIB::ZLIB ENCOURAGED)
+link_package(LIBLZMA TARGET LibLZMA::LibLZMA ENCOURAGED)
 link_package(LZO ENCOURAGED)
 link_package(XDG_basedir)
 
 if (NOT OPTION_DEDICATED)
     link_package(Fluidsynth)
     link_package(SDL)
-    link_package(SDL2)
+    link_package(SDL2 TARGET SDL2::SDL2)
     link_package(Allegro)
-    link_package(FREETYPE)
-    link_package(Fontconfig)
-    link_package(ICU_lx)
-    link_package(ICU_i18n)
+    link_package(FREETYPE TARGET Freetype::Freetype)
+    link_package(Fontconfig TARGET Fontconfig::Fontconfig)
+    link_package(ICU_lx TARGET ICU::lx)
+    link_package(ICU_i18n TARGET ICU::i18n)
 endif (NOT OPTION_DEDICATED)
 
 if (APPLE)
-    link_package(Iconv)
+  link_package(Iconv TARGET Iconv::Iconv)
 
     target_link_libraries(openttd
         ${AUDIOTOOLBOX_LIBRARY}
